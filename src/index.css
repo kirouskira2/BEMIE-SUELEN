@@ -1,0 +1,4664 @@
+@import './styles/terrene.css';
+@import './styles/bundle-index.css';
+@import './styles/bundle-routes.css';
+
+/* =========================================================
+   GUIA DE IMPLEMENTAÇÃO: MOLDURA E HERO COM BORDAS ARREDONDADAS (PIXEL PERFECT)
+   ========================================================= */
+
+:root {
+  --frame: #ffffff;
+  --frame-dark: #f5f3ef;
+  --frame-accent: #2a2826;
+  --background: #ffffff;
+  --foreground: #181512;
+  --muted-foreground: #736b63;
+  --border: #e6dfd5;
+}
+
+html,
+body {
+  background-color: #ffffff !important;
+}
+
+.text-frame {
+  color: var(--frame) !important;
+}
+
+.bg-frame {
+  background-color: var(--frame) !important;
+}
+
+/* 4 faixas fixas da moldura externa */
+.site-frame {
+  position: fixed;
+  z-index: 9999;
+  background-color: var(--frame);
+  pointer-events: none;
+}
+.site-frame--top, 
+.site-frame--bottom {
+  left: 0;
+  width: 100%;
+  height: 10px;
+}
+.site-frame--top { top: 0; }
+.site-frame--bottom { bottom: 0; }
+
+.site-frame--left, 
+.site-frame--right {
+  top: 0;
+  width: 10px;
+  height: 100%;
+}
+.site-frame--left { left: 0; }
+.site-frame--right { right: 0; }
+
+/* 4 cantos côncavos */
+.site-corner {
+  position: fixed;
+  z-index: 9999;
+  color: var(--frame);
+  pointer-events: none;
+}
+.site-corner--top-left { 
+  top: 10px; 
+  left: 10px; 
+  transform: rotate(90deg); 
+}
+.site-corner--top-right { 
+  top: 10px; 
+  right: 10px; 
+  transform: rotate(180deg); 
+}
+.site-corner--bottom-left { 
+  bottom: 10px; 
+  left: 10px; 
+  transform: rotate(0deg); 
+}
+.site-corner--bottom-right { 
+  bottom: 10px; 
+  right: 10px; 
+  transform: rotate(270deg); 
+}
+
+/* Ocultar moldura em telas móveis */
+@media (max-width: 850px) {
+  .site-corner, 
+  .site-frame {
+    display: none !important;
+  }
+}
+
+/* Utilitários de bordas arredondadas e encaixes 4xl */
+.rounded-b-4xl {
+  border-bottom-left-radius: 2.5rem;
+  border-bottom-right-radius: 2.5rem;
+}
+.rounded-bl-4xl {
+  border-bottom-left-radius: 2.5rem;
+}
+.rounded-br-4xl {
+  border-bottom-right-radius: 2.5rem;
+}
+
+/* =========================================================
+   HEADER "NOTCH" APPLE MACBOOK CONECTADO À MOLDURA DE 10PX
+   ========================================================= */
+.apple-notch-header {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1024px, calc(100vw - 130px));
+  background-color: var(--frame);
+  z-index: 9998;
+  border-bottom-left-radius: 2.25rem;
+  border-bottom-right-radius: 2.25rem;
+  box-shadow: 0 16px 40px rgba(20, 19, 19, 0.08);
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              top 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s ease,
+              background-color 0.25s ease,
+              backdrop-filter 0.25s ease,
+              opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: width, top, border-radius, box-shadow, transform, opacity;
+}
+
+.apple-notch-inner {
+  height: 5.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem 0 1.65rem;
+  gap: 1rem;
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              gap 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Orelhas laterais côncavas (-left-[49px] e -right-[49px]) */
+.apple-notch-ear {
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  color: var(--frame);
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-notch-ear--left {
+  left: -49px;
+  transform: rotate(180deg);
+}
+
+.apple-notch-ear--right {
+  right: -49px;
+  transform: rotate(90deg);
+}
+
+/* =========================================================
+   ENCOLHIMENTO DO SIDEBAR / NOTCH PARA PÍLULA NO SCROLL
+   ========================================================= */
+.apple-notch-header.is-pill {
+  top: 18px !important;
+  width: min(780px, calc(100vw - 36px)) !important;
+  border-radius: 9999px !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(20, 19, 19, 0.08) !important;
+}
+
+.apple-notch-header.is-catalog-hidden,
+.apple-notch-header.is-pill.is-catalog-hidden {
+  transform: translate(-50%, calc(-100% - 36px)) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+#icons.menu-toggle.eagle-icons-pill.is-catalog-hidden:not(.opened) {
+  transform: translate(-50%, calc(100% + 44px)) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.apple-notch-header.is-pill .apple-notch-inner {
+  height: 4.6rem !important;
+  padding: 0 1.3rem 0 1.3rem !important;
+  gap: 0.75rem !important;
+}
+
+.apple-notch-header.is-pill .apple-notch-ear {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.apple-notch-header.is-pill .apple-notch-logo-badge {
+  width: 5.8rem !important;
+  height: 3.45rem !important;
+  border-radius: 1rem !important;
+}
+
+.apple-notch-header.is-pill .apple-notch-brand-text {
+  font-size: 1.06rem !important;
+}
+
+.apple-notch-header.is-pill .apple-notch-link {
+  padding: 0.42rem 0.8rem !important;
+  font-size: 0.85rem !important;
+}
+
+.apple-notch-header.is-pill .apple-notch-cta-label {
+  padding: 0.5rem 0.9rem !important;
+  font-size: 0.82rem !important;
+}
+
+.apple-notch-header.is-pill .apple-notch-cta-icon {
+  padding: 0 0.55rem !important;
+}
+
+.apple-notch-header.is-pill .apple-notch-cart-btn {
+  padding: 0.4rem 0.55rem !important;
+  font-size: 0.85rem !important;
+}
+
+/* Marca + Logo à esquerda do Notch (tamanho ampliado) */
+.apple-notch-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  text-decoration: none;
+  color: #141313;
+  flex-shrink: 0;
+}
+
+.apple-notch-logo-badge {
+  width: 6.6rem;
+  height: 3.95rem;
+  border-radius: 1.1rem;
+  background-color: #f3e9dc;
+  border: 1px solid #dbc6ac;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(94, 62, 41, 0.1);
+}
+
+.apple-notch-logo-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  transform: scale(1.08);
+  display: block;
+  border-radius: inherit;
+}
+
+.apple-notch-brand-text {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #141313;
+  white-space: nowrap;
+}
+
+/* Links centrais do Notch */
+.apple-notch-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.apple-notch-link {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 9999px;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: rgba(20, 19, 19, 0.72);
+  transition: color 0.2s ease, background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.apple-notch-link:hover {
+  color: #141313;
+  background-color: rgba(20, 19, 19, 0.06);
+}
+
+/* Ações à direita do Notch */
+.apple-notch-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-shrink: 0;
+}
+
+.apple-notch-cart-btn {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0.45rem 0.65rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: #141313;
+  transition: color 0.2s ease;
+}
+
+.apple-notch-cart-btn:hover {
+  color: #000000;
+}
+
+.apple-notch-cart-badge {
+  background: rgba(20, 19, 19, 0.08);
+  color: #141313;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.74rem;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.35rem;
+}
+
+/* Botão Dual-Pill estilo referência ("Ver catálogo" + bloco de seta) */
+.apple-notch-cta {
+  cursor: pointer;
+  border: none;
+  background: var(--frame-accent);
+  border-radius: 0.85rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: stretch;
+  overflow: hidden;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.apple-notch-cta:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.apple-notch-cta-label {
+  background: #141313;
+  color: #ffffff;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 0.62rem 1.05rem;
+  border-radius: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.apple-notch-cta-icon {
+  color: #ffffff;
+  padding: 0 0.68rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .apple-notch-brand-text {
+    display: none;
+  }
+}
+
+@media (max-width: 850px) {
+  .apple-notch-header {
+    top: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    border-bottom-left-radius: 1.75rem;
+    border-bottom-right-radius: 1.75rem;
+    overflow: hidden;
+  }
+  .apple-notch-header.is-catalog-hidden:not(.is-pill) {
+    transform: translateY(calc(-100% - 36px)) !important;
+  }
+  .apple-notch-header.is-pill {
+    top: 12px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: calc(100vw - 24px) !important;
+    max-width: 440px !important;
+    border-radius: 9999px !important;
+  }
+  .apple-notch-header.is-pill.is-catalog-hidden {
+    transform: translate(-50%, calc(-100% - 36px)) !important;
+  }
+  .apple-notch-inner {
+    height: 4.5rem;
+    padding: 0 1.15rem;
+  }
+  .apple-notch-header.is-pill .apple-notch-inner {
+    height: 3.9rem !important;
+    padding: 0 1rem !important;
+  }
+  .apple-notch-logo-badge {
+    width: 4.8rem;
+    height: 3rem;
+  }
+  .apple-notch-header.is-pill .apple-notch-logo-badge {
+    width: 4.4rem !important;
+    height: 2.75rem !important;
+  }
+  .apple-notch-nav,
+  .apple-notch-ear {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   HERO SECTION COMPACTA COM ENCAIXE CENTRALIZADO E EQUILIBRADO
+   ========================================================= */
+.hero.site-hero {
+  position: relative;
+  width: 100%;
+  height: clamp(250px, 40svh, 370px) !important;
+  min-height: 250px !important;
+  max-height: 370px !important;
+  background-color: var(--frame);
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-hero-media {
+  position: absolute;
+  top: 10px;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(980px, calc(100vw - 32px));
+  border-radius: 1.85rem;
+  overflow: hidden;
+  z-index: 1;
+  background-color: #d7c8b7;
+  box-shadow: 0 16px 40px rgba(45, 26, 15, 0.12);
+}
+
+@media (max-width: 850px) {
+  .hero.site-hero {
+    height: clamp(210px, 34svh, 290px) !important;
+    min-height: 210px !important;
+    max-height: 290px !important;
+  }
+  .site-hero-media {
+    top: 8px;
+    bottom: 4px;
+    width: calc(100vw - 24px);
+    border-radius: 1.5rem;
+  }
+}
+
+.site-hero-img,
+.site-hero-video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center 48% !important;
+  display: block;
+  filter: none !important;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.site-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(81, 52, 36, 0.02) 0%,
+    rgba(81, 52, 36, 0.01) 70%,
+    rgba(81, 52, 36, 0.08) 100%
+  );
+  pointer-events: none;
+}
+
+/* =========================================================
+   CARREGADOR E LINHA VERTICAL PIXEL PERFECT (DO IT ARQUITETURA SPEC)
+   ========================================================= */
+.loader {
+  z-index: 100000;
+  pointer-events: all;
+  width: 100vw;
+  height: 100svh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+.loader .overlay {
+  width: 100%;
+  height: 100%;
+  color: var(--base-100);
+  display: flex;
+  position: absolute;
+  top: 0;
+}
+.loader .block {
+  background: var(--base-500);
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+.loader .intro-logo {
+  width: 100vw;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 5;
+}
+.loader #word-1 {
+  flex: 1 1 50%;
+  display: flex;
+  justify-content: flex-end;
+  color: var(--base-100);
+  padding-right: 1.5rem;
+  position: relative;
+  left: 0;
+  overflow: hidden;
+}
+.loader #word-2 {
+  flex: 1 1 50%;
+  display: flex;
+  justify-content: flex-start;
+  color: var(--base-100);
+  padding-left: 1.5rem;
+  position: relative;
+  left: 0;
+  overflow: hidden;
+}
+.loader .word h1 {
+  color: var(--base-300);
+  letter-spacing: -0.05rem;
+  font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  white-space: nowrap;
+  display: inline-block;
+  position: relative;
+  will-change: transform;
+}
+@media (max-width: 640px) {
+  .loader #word-1 {
+    padding-right: 0.85rem;
+  }
+  .loader #word-2 {
+    padding-left: 0.85rem;
+  }
+  .loader .word h1 {
+    font-size: clamp(1.15rem, 4.2vw, 1.5rem);
+  }
+}
+.loader .divider {
+  transform-origin: top;
+  background-color: #f2ede620;
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%);
+}
+.loader .spinner-container {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translate(-50%);
+}
+.loader .spinner {
+  border: 1.4px solid var(--base-350);
+  border-top-color: #f2ede60d;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: 1s linear infinite spin;
+}
+.loader .counter {
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.loader .count {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.loader .digit {
+  flex: 1;
+  padding-top: 1rem;
+}
+.loader .count .digit h1 {
+  color: var(--base-400);
+  font-size: 15rem;
+  font-weight: 400;
+}
+.loader .line,
+.loader .word,
+.loader .count .digit {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+.loader .line h1,
+.loader .line p,
+.loader .count .digit h1 {
+  will-change: transform;
+  position: relative;
+  transform: translateY(120%);
+}
+.loader #word-1 h1 {
+  transform: translateY(-120%);
+}
+.loader #word-2 h1 {
+  transform: translateY(120%);
+}
+.loader .divider {
+  will-change: transform;
+  transform: scaleY(0);
+}
+@media (width <= 1000px) {
+  .loader .counter .count .digit h1 {
+    font-size: 7rem;
+  }
+  .loader .counter .count .digit {
+    padding-top: 0.25rem;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.cta-window .cta-window-img-wrapper img {
+  object-fit: cover;
+  object-position: center 50%;
+}
+
+.client-reviews .client-review-img img {
+  object-position: center 28%;
+}
+
+.featured-projects-container {
+  overflow: visible;
+  padding: 3.25rem 0 0 !important;
+  background-color: #ffffff !important;
+  color: #181512 !important;
+}
+
+.featured-projects-container .featured-projects-header-callout {
+  margin-bottom: 0.6rem !important;
+  color: #7b5238 !important;
+}
+
+.featured-projects-container .featured-projects-header-callout p {
+  color: #7b5238 !important;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.featured-projects-container .featured-projects-header {
+  margin: 0 auto 1.25rem !important;
+}
+
+.featured-projects-container .featured-projects-header h2 {
+  color: #181512 !important;
+}
+
+.featured-projects {
+  overflow: visible;
+  padding: 0.5rem 1.25rem 0.75rem !important;
+  background-color: #ffffff !important;
+  color: #181512 !important;
+}
+
+.featured-projects .featured-project-card {
+  position: sticky;
+  top: 0;
+  height: 90svh;
+  min-height: 540px;
+  margin-bottom: 2.5rem;
+  padding: 2.75rem 0 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* O último card (data-card-index="3") não precisa de margin-bottom residual */
+.featured-projects .featured-project-card:last-child {
+  margin-bottom: 0 !important;
+}
+
+.featured-projects .featured-project-card-inner {
+  padding: 1.5rem 2rem !important;
+  gap: clamp(1.25rem, 2vw, 2rem) !important;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  height: min(72svh, 540px);
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background-color: #efe3d3 !important;
+  border: 1px solid #dbc6ac;
+  box-shadow: 0 24px 60px rgba(94, 62, 41, 0.14);
+}
+
+/* Todos os cards empilhados unificados em bege areia da logo (#efe3d3) */
+.featured-projects .featured-project-card:nth-child(odd) .featured-project-card-inner,
+.featured-projects .featured-project-card:nth-child(even) .featured-project-card-inner,
+.featured-projects .featured-project-card-inner.is-sand-card,
+.featured-projects .featured-project-card-inner.is-white-card {
+  background: linear-gradient(135deg, #f3e9dc 0%, #ead8c3 100%) !important;
+  background-color: #efe3d3 !important;
+  border: 1px solid #d9c2a6 !important;
+  box-shadow: 0 24px 60px rgba(94, 62, 41, 0.14) !important;
+}
+
+.featured-projects .featured-project-card-inner::after {
+  background-color: #c9b298 !important;
+}
+
+.featured-projects .featured-project-card-content {
+  flex-direction: column !important;
+  flex: 1.08 !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 0.45rem !important;
+  padding: 0 0.5rem 0 0.25rem !important;
+  height: 100%;
+}
+
+.featured-projects .featured-project-card-info,
+.featured-projects .featured-project-card-info p {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 0.82rem !important;
+  color: #7b5238 !important;
+  font-family: 'DM Mono', monospace;
+  text-align: left;
+}
+
+.featured-projects .featured-project-card-content-main {
+  padding: 0 !important;
+  width: 100% !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem !important;
+}
+
+.featured-projects .featured-project-card-title h2 {
+  font-size: clamp(1.45rem, 2.1vw, 2.05rem) !important;
+  line-height: 1.15 !important;
+  padding: 0 0 0.25rem 0 !important;
+  margin: 0 !important;
+  letter-spacing: -0.025em;
+  color: #181512 !important;
+}
+
+.featured-projects .featured-project-card-description {
+  width: 100% !important;
+  max-width: 30rem !important;
+  text-align: left;
+}
+
+.featured-projects .featured-project-card-description p.lg {
+  font-size: 0.92rem !important;
+  line-height: 1.48 !important;
+  color: #4a3f37 !important;
+  margin: 0 0 0.55rem 0 !important;
+}
+
+.featured-projects .featured-project-card-media-col {
+  flex: 0.92;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.featured-projects .featured-project-card-img {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 18px 44px rgba(58, 39, 25, 0.18);
+}
+
+.featured-projects .featured-project-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  transition: opacity 0.35s ease;
+}
+
+/* =========================================================
+   FUNCIONALIDADE DE ZOOM DE ALTA FIDELIDADE NO TECIDO
+   ========================================================= */
+.bemie-zoom-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: zoom-in;
+  border-radius: inherit;
+  display: block;
+}
+
+.bemie-zoom-container.is-zoomed {
+  cursor: zoom-out;
+}
+
+.bemie-zoom-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center 20%;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, transform-origin;
+  border-radius: inherit;
+  display: block;
+  pointer-events: none;
+}
+
+.bemie-zoom-indicator {
+  position: absolute;
+  bottom: 0.85rem;
+  right: 0.85rem;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.32rem 0.72rem;
+  border-radius: 9999px;
+  background: rgba(20, 19, 19, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #f2ede6;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.22s ease, transform 0.22s ease, background-color 0.22s ease;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+}
+
+.bemie-zoom-container:hover .bemie-zoom-indicator {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bemie-zoom-indicator.active {
+  background: rgba(81, 52, 36, 0.92);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+/* Interactive controls inside Featured 3D Cards */
+.bemie-card-controls {
+  width: 100%;
+  margin-top: 0.6rem !important;
+  padding-top: 0.65rem !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem !important;
+  border-top: 1px solid rgba(123, 82, 56, 0.18) !important;
+}
+
+.bemie-card-price-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.bemie-price-old {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.95rem;
+  color: #8c7a6b;
+  text-decoration: line-through;
+}
+
+.bemie-price-current {
+  font-family: 'Manrope Variable', sans-serif;
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: #181512;
+  letter-spacing: -0.03em;
+}
+
+.bemie-offer-pill,
+.bemie-discount-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.74rem;
+  line-height: 1;
+  text-transform: uppercase;
+  background: #7b5238;
+  color: #faf5ef;
+  padding: 0.38rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bemie-size-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.bemie-meta-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: #6e5d4f;
+  margin-right: 0.25rem;
+}
+
+.bemie-size-btn {
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(123, 82, 56, 0.35);
+  background: rgba(255, 255, 255, 0.75);
+  color: #2b221b;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.bemie-size-btn:hover:not(:disabled) {
+  border-color: #181512;
+  color: #181512;
+  background: #ffffff;
+}
+
+.bemie-size-btn.active {
+  background: #181512;
+  border-color: #181512;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.bemie-size-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.bemie-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.bemie-action-primary {
+  cursor: pointer;
+  background: #181512;
+  color: #ffffff;
+  border: 1px solid #181512;
+  border-radius: 999px;
+  height: 2.85rem;
+  padding: 0 1.45rem;
+  font-family: 'Manrope Variable', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bemie-action-primary:hover {
+  background: #7b5238;
+  border-color: #7b5238;
+  color: #ffffff;
+}
+
+.bemie-action-secondary {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.65);
+  color: #181512;
+  border: 1px solid rgba(24, 21, 18, 0.28);
+  border-radius: 999px;
+  height: 2.85rem;
+  padding: 0 1.35rem;
+  font-family: 'Manrope Variable', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bemie-action-secondary:hover {
+  border-color: #181512;
+  background: #181512;
+  color: #ffffff;
+}
+
+.bemie-action-primary.full,
+.bemie-action-secondary.full {
+  width: 100%;
+}
+
+/* Miniature photo previews below main photo in Featured Cards */
+.bemie-photo-thumbs {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(123, 82, 56, 0.22);
+  padding: 0.38rem 0.55rem;
+  border-radius: 0.85rem;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(94, 62, 41, 0.12);
+}
+
+.bemie-thumb-btn {
+  width: 2.65rem;
+  height: 3.5rem;
+  border-radius: 0.45rem;
+  overflow: hidden;
+  border: 1.5px solid rgba(123, 82, 56, 0.25);
+  cursor: pointer;
+  padding: 0;
+  background: #efe3d3;
+  opacity: 0.65;
+  flex-shrink: 0;
+  transition: opacity 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.bemie-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+
+.bemie-thumb-btn:hover {
+  opacity: 0.95;
+  border-color: #7b5238;
+  transform: translateY(-1px);
+}
+
+.bemie-thumb-btn.active {
+  opacity: 1;
+  border: 2px solid #181512;
+  box-shadow: 0 4px 12px rgba(24, 21, 18, 0.22);
+}
+
+/* Complete Bemiê 10-Product Catalog Section — Fundo Preto (#0a0a0a) */
+.bemie-catalog-section,
+.bemie-catalog-section > .container {
+  background: #0a0a0a !important;
+  background-color: #0a0a0a !important;
+  color: #f2ede6 !important;
+}
+
+.bemie-catalog-section {
+  padding: 3.5rem 0 4.5rem !important;
+  position: relative;
+}
+
+.bemie-catalog-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+  margin-bottom: 3rem;
+}
+
+.bemie-catalog-title-block {
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.bemie-catalog-title-block h2 {
+  color: #f2ede6 !important;
+}
+
+.bemie-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #dfc7ab;
+  margin-bottom: 0.75rem;
+}
+
+.bemie-catalog-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  padding: 1.25rem 1.35rem;
+  background: #141313;
+  border: 1px solid rgba(239, 227, 211, 0.16);
+  border-radius: 1.5rem;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+}
+
+.bemie-filter-pills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.bemie-filter-chip {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(239, 227, 211, 0.2);
+  color: #e6ddd2;
+  border-radius: 9999px;
+  padding: 0.6rem 1.15rem;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.bemie-filter-chip:hover {
+  border-color: #efe3d3;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.bemie-filter-chip.active {
+  background: #efe3d3;
+  border-color: #efe3d3;
+  color: #141313;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(239, 227, 211, 0.22);
+}
+
+.bemie-search-wrap {
+  min-width: 18rem;
+  flex: 1;
+  max-width: 26rem;
+}
+
+.bemie-search-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.bemie-search-icon {
+  position: absolute;
+  left: 1.05rem;
+  color: #dfc7ab;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.bemie-search-input {
+  width: 100%;
+  background: #1c1a18;
+  border: 1px solid rgba(239, 227, 211, 0.22);
+  border-radius: 9999px;
+  padding: 0.72rem 2.4rem 0.72rem 2.7rem;
+  color: #f2ede6;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.bemie-search-input:focus {
+  border-color: #efe3d3;
+  box-shadow: 0 0 0 3px rgba(239, 227, 211, 0.16);
+}
+
+.bemie-search-input::placeholder {
+  color: #9c9185;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.bemie-search-clear {
+  position: absolute;
+  right: 0.75rem;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 999px;
+  border: none;
+  background: rgba(239, 227, 211, 0.18);
+  color: #f2ede6;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.bemie-search-clear:hover {
+  background: rgba(239, 227, 211, 0.32);
+}
+
+/* =========================================================
+   EAGLE SHOWCASE: #cursor Mouse Ball + #icons Menu Pill + #page2 + #page3
+   ========================================================= */
+
+/* Desativação da bola gigante no background conforme solicitado */
+#cursor {
+  display: none !important;
+}
+
+/* =========================================================
+   CUSTOM CIRCULAR CURSOR DESATIVADO (PONTEIRO ORIGINAL PADRÃO)
+   ========================================================= */
+.bemie-custom-cursor-container {
+  display: none !important;
+}
+
+.bemie-cursor-ring,
+.bemie-cursor-dot {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  border-radius: 9999px !important;
+  pointer-events: none !important;
+  mix-blend-mode: difference !important;
+  z-index: 999999 !important;
+  will-change: transform !important;
+}
+
+/* Ponto Central Imediato (Dot preciso 6px sem lag) */
+.bemie-cursor-dot {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #ffffff !important;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease, transform 0.15s ease-out !important;
+}
+
+.bemie-cursor-dot.is-hovered {
+  opacity: 0 !important;
+  transform: translate(-50%, -50%) scale(0) !important;
+}
+
+.bemie-cursor-dot.is-clicked {
+  transform: translate(-50%, -50%) scale(0.6) !important;
+}
+
+/* Anel Externo Suave (Halo Trailing Ring 34px com LERP) */
+.bemie-cursor-ring {
+  width: 34px !important;
+  height: 34px !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  background-color: transparent !important;
+  transform: translate(-50%, -50%);
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.25s ease,
+              border-color 0.25s ease,
+              transform 0.15s ease !important;
+}
+
+/* Hover em elementos clicáveis (links, botões, inputs): expansão suave */
+.bemie-cursor-ring.is-hovered {
+  width: 54px !important;
+  height: 54px !important;
+  background-color: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(1px) !important;
+  -webkit-backdrop-filter: blur(1px) !important;
+}
+
+/* Active State (clique): contração rápida no mousedown */
+.bemie-cursor-ring.is-clicked {
+  transform: translate(-50%, -50%) scale(0.75) !important;
+}
+
+/* Centered bottom #icons pill (<div id="icons"><i class="ri-menu-fill"></i><i class="ri-shopping-cart-2-line"></i></div>) */
+#icons.menu-toggle.eagle-icons-pill {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto !important;
+  height: auto !important;
+  padding: 11px 24px !important;
+  border-radius: 50px !important;
+  background-color: #F7F7F7 !important;
+  color: #141313 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 32px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(20, 19, 19, 0.08);
+  z-index: 1200;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, background-color 0.25s ease;
+}
+
+#icons.menu-toggle.eagle-icons-pill:hover {
+  transform: translateX(-50%) scale(1.04);
+}
+
+#icons.menu-toggle.eagle-icons-pill .eagle-icon-trigger {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #141313;
+}
+
+#icons.menu-toggle.eagle-icons-pill i {
+  font-size: 19px;
+  line-height: 1;
+  color: #141313;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#icons.menu-toggle.eagle-icons-pill i:hover {
+  opacity: 0.65;
+  transform: scale(1.08);
+}
+
+.eagle-cart-trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eagle-cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -11px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background-color: #141313;
+  color: #F7F7F7;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* #page2 - 3 vertical photos with expandable .dets pills */
+.eagle-page2-section {
+  position: relative;
+  width: 100%;
+  background-color: var(--base-500);
+  padding: 4rem 3vw 2rem;
+  z-index: 5;
+}
+
+#page2 {
+  min-height: 100vh;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 2.2vw max(2.5vw, calc((100vw - 1480px) / 2 + 2.5vw)) 3.8vw;
+  justify-content: space-between;
+  gap: 1.6vw;
+  z-index: 5;
+  background-color: var(--frame);
+}
+
+#page2 .elem {
+  height: 82vh;
+  max-height: 760px;
+  width: 32%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.75rem;
+  box-shadow: 0 22px 52px rgba(45, 26, 15, 0.28);
+  cursor: pointer;
+}
+
+#page2 .elem > img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  transform: scale(1.06);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 1;
+}
+
+#page2 .elem:hover > img {
+  transform: scale(1.11);
+}
+
+#page2 .elem .elem-reel-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(1.03);
+}
+
+#page2 .elem .elem-reel-video.is-visible {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 4;
+}
+
+#page2 .elem .elem-reel-video.is-hidden-reel {
+  opacity: 0 !important;
+  pointer-events: none;
+  z-index: 2;
+}
+
+#page2 .elem .elem-reel-top-bar {
+  position: absolute;
+  top: 1.15rem;
+  left: 1.15rem;
+  right: 1.15rem;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+#page2 .elem .elem-reel-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.36rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(20, 19, 19, 0.64);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+#page2 .elem.is-playing-reel .elem-reel-pill {
+  background: rgba(123, 82, 56, 0.88);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+#page2 .elem .elem-reel-sound-btn {
+  pointer-events: auto;
+  cursor: pointer;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(20, 19, 19, 0.66);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.98rem;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.22s ease, transform 0.22s ease, background-color 0.22s ease;
+}
+
+#page2 .elem:hover .elem-reel-sound-btn,
+#page2 .elem.is-playing-reel .elem-reel-sound-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#page2 .elem .elem-reel-sound-btn:hover {
+  background: rgba(20, 19, 19, 0.88);
+}
+
+#elem1 .dets-info,
+#elem1 .dets-container {
+  background-color: #B4D5B6;
+}
+
+#elem2 .dets-info,
+#elem2 .dets-container {
+  background-color: #F5DFCF;
+}
+
+#elem3 .dets-info,
+#elem3 .dets-container {
+  background-color: #F2EDE6;
+}
+
+#page2 .elem .dets {
+  position: absolute;
+  top: 64%;
+  z-index: 9;
+  color: #141313;
+}
+
+#page2 .dets .dets-info {
+  width: 304px;
+  height: 50px;
+  border-radius: 25px;
+  padding: 0 26px;
+  font-size: 13px;
+  font-family: 'Manrope Variable', sans-serif;
+  letter-spacing: 0.04em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+  color: #141313;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+#page2 .dets .dets-info p {
+  color: #141313;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+#page2 .dets .dets-info p b {
+  font-weight: 700;
+}
+
+#page2 .dets .dets-info i {
+  font-size: 14px;
+  color: #141313;
+}
+
+#page2 .dets .dets-info .ri-circle-fill {
+  font-size: 8px;
+}
+
+.dets .dets-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 304px;
+  height: 50px;
+  border-radius: 25px;
+  overflow: hidden;
+  padding-top: 50px;
+  z-index: 1;
+  transition: height 0.35s cubic-bezier(0.22, 0.57, 0.12, 0.96);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.dets:hover .dets-container {
+  height: 252px;
+}
+
+.dets-container .listing {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 8px 12px 14px;
+}
+
+.listing .list-elem {
+  width: 46%;
+  height: 92%;
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.listing .list-elem:hover {
+  background-color: rgba(20, 19, 19, 0.06);
+  transform: translateY(-2px);
+}
+
+.list-elem .img-cont {
+  width: 100%;
+  height: 118px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.list-elem .img-cont img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  transform: scale(1);
+}
+
+.list-elem p {
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #141313;
+  margin: 6px 0 0;
+}
+
+/* #page3 - 2-column product showcase on BLACK background */
+#page3,
+#page3.bemie-eagle-page3,
+#page3.eagle-page3-grid {
+  min-height: 120vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  row-gap: 3.5rem;
+  column-gap: 2.25rem;
+  padding: 2rem 0 1.5rem;
+  background: #0a0a0a !important;
+  background-color: #0a0a0a !important;
+  color: #f2ede6 !important;
+}
+
+#page3 .child {
+  width: 44%;
+  max-width: 440px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  border-radius: 1.75rem;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+#page3 .child.is-highlighted-child .child-media-wrap {
+  border-color: #efe3d3;
+  box-shadow: 0 0 0 3px rgba(239, 227, 211, 0.55), 0 22px 54px rgba(0, 0, 0, 0.65);
+}
+
+#page3 .child .child-media-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 350px;
+  aspect-ratio: 3 / 4;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
+  background: #181614 !important;
+  border: 1px solid rgba(239, 227, 211, 0.2);
+}
+
+#page3 .child .child-media-wrap img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  border-radius: 1.5rem;
+  position: relative;
+  z-index: 6;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#page3 .child:hover .child-media-wrap img {
+  transform: scale(1.04);
+}
+
+#page3 .child .child-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 8;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+#page3 .child .bemie-grid-badges,
+#page3 .child .bemie-grid-thumbs {
+  z-index: 8;
+}
+
+.bemie-grid-thumbs {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+  margin: 0 auto;
+  padding: 0.38rem 0.55rem;
+  background: #181614 !important;
+  border: 1px solid rgba(239, 227, 211, 0.24) !important;
+  border-radius: 0.85rem;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+  max-width: fit-content;
+}
+
+.bemie-grid-thumb-dot.bemie-grid-thumb-preview,
+.bemie-grid-thumb-preview {
+  cursor: pointer;
+  position: relative;
+  width: 2.65rem;
+  height: 3.5rem;
+  border-radius: 0.45rem;
+  border: 1.5px solid rgba(239, 227, 211, 0.25);
+  background: #24201c;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  display: block;
+  flex-shrink: 0;
+  opacity: 0.65;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.bemie-grid-thumb-dot.bemie-grid-thumb-preview:hover,
+.bemie-grid-thumb-preview:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+  border-color: #efe3d3;
+}
+
+.bemie-grid-thumb-dot.bemie-grid-thumb-preview.active,
+.bemie-grid-thumb-preview.active {
+  opacity: 1;
+  border: 2px solid #efe3d3;
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.bemie-grid-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  pointer-events: none;
+}
+
+.bemie-grid-thumb-dot:not(.bemie-grid-thumb-preview) {
+  cursor: pointer;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  border: 1px solid #ffffff40;
+  background: #141313cc;
+  color: var(--base-200);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bemie-grid-thumb-dot:not(.bemie-grid-thumb-preview).active {
+  background: var(--base-100);
+  color: var(--base-500);
+  border-color: var(--base-100);
+  font-weight: 600;
+}
+
+#page3 .child .childInfo {
+  text-align: center;
+  position: relative;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.child-style-tags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.15rem;
+}
+
+.child-style-tag-pill {
+  cursor: pointer;
+  background: rgba(239, 227, 211, 0.12);
+  border: 1px solid rgba(239, 227, 211, 0.26);
+  color: #efe3d3;
+  border-radius: 999px;
+  padding: 0.22rem 0.65rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.child-style-tag-pill:hover {
+  background: #efe3d3;
+  border-color: #efe3d3;
+  color: #141313;
+}
+
+#page3 .child .childInfo .child-title,
+#page3 .child .childInfo p {
+  font-family: 'Manrope Variable', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #f2ede6;
+  line-height: 1.45;
+  text-shadow: none;
+}
+
+#page3 .child .childInfo .child-price-line {
+  font-family: 'DM Mono', monospace;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #f2ede6;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  justify-content: center;
+  text-shadow: none;
+}
+
+#page3 .child .childInfo .bemie-price-old {
+  color: #968b80;
+}
+
+#page3 .child .childInfo .child-controls {
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+#page3 .child .bemie-size-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(239, 227, 211, 0.28);
+  color: #f2ede6;
+}
+
+#page3 .child .bemie-size-btn:hover:not(:disabled) {
+  border-color: #efe3d3;
+  color: #141313;
+  background: #efe3d3;
+}
+
+#page3 .child .bemie-size-btn.active {
+  background: #efe3d3;
+  border-color: #efe3d3;
+  color: #141313;
+  font-weight: 700;
+}
+
+.bemie-child-buy-btn {
+  cursor: pointer;
+  background: #efe3d3;
+  color: #141313;
+  border: 1px solid #efe3d3;
+  border-radius: 999px;
+  height: 2.5rem;
+  padding: 0 1.25rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.bemie-child-buy-btn:hover {
+  transform: translateY(-1px);
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #141313;
+}
+
+@media (max-width: 1000px) {
+  .featured-projects .featured-project-card-inner {
+    padding: 4.5rem 1.25rem 1.25rem;
+    gap: 1.25rem;
+  }
+  .featured-projects .featured-project-card-info {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.5rem 0.5rem 0;
+    text-align: center;
+    align-items: center;
+  }
+  .featured-projects .featured-project-card-media-col {
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  #page2 {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  #page2 .elem {
+    width: 100%;
+    height: 70vh;
+  }
+  #page3 .child {
+    width: 100%;
+  }
+}
+
+/* Cart Drawer & Checkout Sidebar in Apple MacBook Bezel Design System */
+.bemie-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 19, 19, 0.28);
+  backdrop-filter: blur(6px);
+  z-index: 9998;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bemie-drawer {
+  position: relative;
+  width: min(430px, 100vw);
+  height: 100svh;
+  background: linear-gradient(135deg, #f3e9dc 0%, #ead8c3 100%) !important;
+  background-color: #efe3d3 !important;
+  color: #141313;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #d9c2a6;
+  box-shadow: -20px 0 54px rgba(58, 39, 25, 0.18);
+}
+
+@media (min-width: 851px) {
+  .bemie-drawer {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    height: calc(100svh - 20px);
+    border-radius: 0;
+  }
+}
+
+.bemie-drawer-ear {
+  position: absolute;
+  left: -49px;
+  width: 50px;
+  height: 50px;
+  color: #efe3d3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bemie-drawer-ear--top {
+  top: 0;
+  transform: rotate(180deg);
+}
+
+.bemie-drawer-ear--bottom {
+  bottom: 0;
+  transform: rotate(270deg);
+}
+
+@media (max-width: 850px) {
+  .bemie-drawer-ear {
+    display: none !important;
+  }
+}
+
+.bemie-drawer-header {
+  padding: 1.65rem 1.75rem 1.25rem;
+  border-bottom: 1px solid #d9c2a6;
+  background-color: #efe3d3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bemie-drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.bemie-drawer-brand-img {
+  width: 5.2rem !important;
+  height: 3.4rem !important;
+  border-radius: 0.85rem;
+  background: #f3e9dc;
+  border: 1px solid #dbc6ac;
+  padding: 0;
+  object-fit: cover !important;
+  object-position: center center !important;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(94, 62, 41, 0.1);
+}
+
+.bemie-drawer-header h3 {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #141313;
+  line-height: 1.2;
+}
+
+.bemie-drawer-header .bemie-eyebrow {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6e6862;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.bemie-drawer-close {
+  cursor: pointer;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0;
+  border: 1px solid rgba(20, 19, 19, 0.16);
+  background: transparent;
+  color: #141313;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.bemie-drawer-close:hover {
+  background: rgba(20, 19, 19, 0.06);
+  color: #141313;
+  transform: rotate(90deg);
+}
+
+.bemie-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+.bemie-drawer-empty {
+  text-align: center;
+  padding: 4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.bemie-drawer-empty p {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #141313;
+}
+
+.bemie-muted {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  color: #6e6862;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none !important;
+  line-height: 1.48;
+}
+
+.bemie-cart-row {
+  display: flex;
+  gap: 1rem;
+  padding: 0.85rem;
+  background: #fbf8f4;
+  border: 1px solid rgba(20, 19, 19, 0.1);
+  border-radius: 0;
+  align-items: center;
+  transition: border-color 0.2s ease;
+}
+
+.bemie-cart-row:hover {
+  border-color: rgba(20, 19, 19, 0.22);
+}
+
+.bemie-cart-thumb {
+  width: 4.5rem;
+  height: 5.4rem;
+  border-radius: 0;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.bemie-cart-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bemie-cart-info h4 {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #141313;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.bemie-cart-size {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6e6862;
+}
+
+.bemie-cart-qty-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+
+.bemie-qty-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid rgba(20, 19, 19, 0.18);
+  border-radius: 0;
+  padding: 0.15rem 0.55rem;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #141313;
+}
+
+.bemie-qty-controls button {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: #141313;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.95rem;
+  padding: 0.1rem 0.35rem;
+  transition: color 0.15s ease;
+}
+
+.bemie-qty-controls button:hover:not(:disabled) {
+  color: #6e6862;
+}
+
+.bemie-qty-controls button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.bemie-cart-line-price {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #141313;
+}
+
+.bemie-drawer-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #d9c2a6;
+  background: #f3e9dc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.bemie-summary-line {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #524d49;
+}
+
+.bemie-summary-line span:last-child {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 600;
+  color: #141313;
+}
+
+.bemie-summary-line.total {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #141313;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(20, 19, 19, 0.12);
+}
+
+.bemie-summary-line.total span:last-child {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #141313;
+}
+
+.bemie-drawer-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.bemie-drawer .bemie-action-primary {
+  background: #1c1510;
+  color: #f3e9dc;
+  border-color: #1c1510;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bemie-drawer .bemie-action-primary:hover {
+  background: #33261d;
+  border-color: #33261d;
+}
+
+.bemie-drawer .bemie-action-secondary {
+  color: #1c1510;
+  border-color: rgba(28, 21, 16, 0.28);
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.bemie-drawer .bemie-action-secondary:hover {
+  border-color: #1c1510;
+  background: rgba(28, 21, 16, 0.06);
+  color: #1c1510;
+}
+
+.bemie-checkout-form .bemie-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bemie-checkout-form label {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #524d49;
+}
+
+.bemie-checkout-form input {
+  background: #ffffff;
+  border: 1px solid rgba(20, 19, 19, 0.18);
+  border-radius: 0;
+  padding: 0.7rem 0.9rem;
+  color: #141313;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.84rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.bemie-checkout-form input:focus {
+  border-color: #141313;
+  box-shadow: none;
+}
+
+.bemie-field-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.bemie-field-row .bemie-field {
+  flex: 1;
+}
+
+.bemie-pay-grid {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bemie-pay-chip {
+  flex: 1;
+  cursor: pointer;
+  padding: 0.65rem 0.5rem;
+  border-radius: 0;
+  border: 1px solid rgba(20, 19, 19, 0.18);
+  background: #ffffff;
+  color: #141313;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.bemie-pay-chip.active {
+  background: #1c1510;
+  color: #f3e9dc;
+  border-color: #1c1510;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.bemie-form-error {
+  background: #fef2f2;
+  border: 1px solid #ef4444;
+  color: #991b1b;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+.bemie-clear-cart-btn {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: #6e6862;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.45rem 0.5rem 0.1rem;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.bemie-clear-cart-btn:hover {
+  color: #141313;
+}
+
+.child-color-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #dfc7ab;
+  margin-top: -0.15rem;
+}
+
+.bemie-catalog-empty {
+  width: 100%;
+  max-width: 34rem;
+  margin: 2rem auto 4rem;
+  padding: 3.5rem 2rem;
+  border-radius: 1.5rem;
+  background: #161412;
+  border: 1px solid rgba(239, 227, 211, 0.22);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.bemie-catalog-empty-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f2ede6;
+}
+
+.bemie-catalog-empty-sub {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.92rem;
+  color: #b8ada1;
+  margin-bottom: 0.5rem;
+}
+
+.cta-window-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 3;
+}
+
+.bemie-footer-nav-btn {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--base-300);
+  padding: 0.2rem 0;
+  text-align: inherit;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.bemie-footer-nav-btn:hover {
+  color: var(--base-100);
+  transform: translateX(-4px);
+}
+
+.featured-projects-container {
+  padding: 3.25rem 0 0 !important;
+}
+
+.bemie-toast {
+  position: fixed;
+  bottom: 5.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2500;
+  background: #1c1510;
+  color: #f3e9dc;
+  border: 1px solid rgba(217, 194, 166, 0.35);
+  padding: 0.72rem 1.35rem;
+  border-radius: 0;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 500;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.32);
+}
+
+.cta-window {
+  background-color: #ffffff !important;
+}
+
+.footer-meta-logo.bemie-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.bemie-footer-logo-img {
+  width: 6.5rem;
+  height: 4.35rem;
+  border-radius: 1rem;
+  object-fit: cover;
+  object-position: center center;
+  background: #f3e9dc;
+  border: 1px solid #dbc6ac;
+  padding: 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+}
+
+@media (width <= 1000px) {
+  .top-bar .top-bar-logo.bemie-logo-wrap {
+    width: 6rem;
+  }
+  .top-bar .btn {
+    display: none;
+  }
+  .featured-projects .featured-project-card {
+    height: 100svh;
+    min-height: 0;
+    padding: 0;
+    margin-bottom: 6svh;
+  }
+  .featured-projects .featured-project-card-inner {
+    padding: 4.1rem 1rem 0.85rem !important;
+    gap: 0.75rem !important;
+    height: calc(100% - 1rem) !important;
+  }
+  .featured-projects .featured-project-card-content {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    align-items: center !important;
+    padding: 0 0.25rem !important;
+    gap: 0.35rem !important;
+  }
+  .featured-projects .featured-project-card-info {
+    text-align: center !important;
+    font-size: 0.76rem !important;
+    margin-bottom: 0.1rem !important;
+  }
+  .featured-projects .featured-project-card-title h2 {
+    font-size: clamp(1.25rem, 5vw, 1.6rem) !important;
+    padding: 0 0 0.25rem 0 !important;
+    text-align: center;
+  }
+  .featured-projects .featured-project-card-description {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .featured-projects .featured-project-card-description p.lg {
+    display: none;
+  }
+  .bemie-card-controls {
+    align-items: center;
+    margin-top: 0.35rem !important;
+    padding-top: 0.45rem !important;
+    gap: 0.45rem !important;
+  }
+  .bemie-card-actions {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .bemie-action-primary,
+  .bemie-action-secondary {
+    height: 2.45rem;
+    padding: 0 1rem;
+    font-size: 0.8rem;
+  }
+  .featured-projects .featured-project-card-media-col {
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    width: 100%;
+    gap: 0.5rem !important;
+  }
+  .bemie-thumb-btn {
+    width: 2.25rem;
+    height: 2.85rem;
+  }
+}
+
+/* =========================================================
+   ADAPTAÇÃO ESTÉTICA NUMANA (https://numana.com.ar/)
+   - Fontes: Work Sans (11px–13px editorial) + Oswald Condensed Display
+   - Bordas 100% retas (border-radius: 0px) em todo o site
+   - Cabeçalho fixo com barra superior de promoções (.numana-adbar)
+   - Hero full-bleed reto e equilibrado
+   - Catálogo em grade de 4 colunas com nome uppercase, ícone de sacola e linha Pix/parcelas
+   - Grade horizontal de 6 fotos do Instagram (@bemiemodapraia)
+   ========================================================= */
+
+html,
+body {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Ocultar molduras curvas periféricas para garantir estética 100% reta */
+.site-frames-root,
+.site-frame,
+.site-corner,
+.apple-notch-ear,
+.bemie-drawer-ear {
+  display: none !important;
+}
+
+/* Forçar bordas retas (0px) em todos os containers, botões, cards, imagens e inputs */
+.apple-notch-header,
+.apple-notch-logo-badge,
+.apple-notch-logo-img,
+.apple-notch-link,
+.apple-notch-cart-btn,
+.apple-notch-cart-badge,
+.apple-notch-cta,
+.apple-notch-cta-label,
+.hero.site-hero,
+.site-hero-media,
+.numana-hero-btn,
+#page2 .elem,
+#page2 .elem > img,
+#page2 .elem .elem-reel-pill,
+#page2 .elem .elem-reel-sound-btn,
+#page2 .dets .dets-info,
+.dets .dets-container,
+.listing .list-elem,
+.list-elem .img-cont,
+.featured-projects .featured-project-card-inner,
+.featured-projects .featured-project-card-img,
+.featured-projects .featured-project-card-img img,
+.bemie-photo-thumbs,
+.bemie-thumb-btn,
+.bemie-offer-pill,
+.bemie-discount-pill,
+.bemie-size-btn,
+.bemie-action-primary,
+.bemie-action-secondary,
+.bemie-catalog-toolbar,
+.bemie-filter-chip,
+.bemie-search-input,
+.bemie-search-clear,
+#page3 .child,
+#page3 .child .child-media-wrap,
+#page3 .child .child-media-wrap img,
+.bemie-zoom-container,
+.bemie-zoom-img,
+.bemie-zoom-indicator,
+.bemie-grid-thumbs,
+.bemie-grid-thumb-dot,
+.bemie-grid-thumb-preview,
+.child-style-tag-pill,
+.bemie-child-buy-btn,
+.bemie-catalog-empty,
+.cta-window .container,
+.cta-window .cta-window-img-wrapper,
+.cta-window .cta-window-img-wrapper img,
+.cta-window .cta-window-img-overlay,
+.numana-instafeed-item,
+.numana-instafeed-img,
+.bemie-drawer,
+.bemie-drawer-brand-img,
+.bemie-drawer-close,
+.bemie-cart-row,
+.bemie-cart-thumb,
+.bemie-qty-controls,
+.bemie-checkout-form input,
+.bemie-pay-chip,
+.bemie-form-error,
+.bemie-toast,
+#icons.menu-toggle.eagle-icons-pill {
+  border-radius: 0px !important;
+}
+
+/* 1. CABEÇALHO COM BARRA DE PROMOÇÕES (FIXO, MOSTRADO AO DESCER E OCULTO AO SUBIR COM SCROLL) */
+.numana-header-hover-zone {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: auto !important;
+  z-index: 9998 !important;
+  pointer-events: auto !important;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.32s ease !important;
+  will-change: transform, opacity !important;
+}
+
+.numana-header-hover-zone.is-hidden {
+  transform: translateY(-100%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.numana-header-hover-zone.is-visible {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.numana-header-spacer {
+  display: block;
+  width: 100%;
+  height: 116px;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .numana-header-spacer {
+    height: 102px;
+  }
+}
+
+.apple-notch-header.numana-header {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05) !important;
+  z-index: 9998 !important;
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Barra inferior #icons (Menu / Sacola) revelada ao passar o mouse na borda inferior para não sobrepor os cards centrais */
+.eagle-icons-hover-zone {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 28px;
+  z-index: 1200;
+  pointer-events: auto;
+}
+
+.eagle-icons-hover-zone:hover {
+  height: 76px;
+}
+
+.eagle-icons-hover-zone:not(:hover) #icons.menu-toggle.eagle-icons-pill:not(.opened) {
+  transform: translate(-50%, calc(100% + 44px)) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.eagle-icons-hover-zone:hover #icons.menu-toggle.eagle-icons-pill,
+#icons.menu-toggle.eagle-icons-pill.opened {
+  transform: translateX(-50%) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.09) !important;
+}
+
+/* Barra superior de promoções: preto conforme solicitado pelo usuário */
+.numana-adbar {
+  width: 100%;
+  min-height: 32px;
+  padding: 0.38rem 1rem;
+  background-color: rgba(20, 19, 18, 0.72) !important;
+  background: rgba(20, 19, 18, 0.72) !important;
+  backdrop-filter: blur(10px) saturate(135%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(135%) !important;
+  border-bottom: 1px solid rgba(243, 233, 220, 0.14) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.numana-adbar-text {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  color: #f3e9dc !important;
+  margin: 0 !important;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.apple-notch-inner.numana-header-main {
+  height: 84px !important;
+  padding: 0 2.5vw !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+.apple-notch-brand.numana-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  text-decoration: none;
+  color: #000000;
+}
+
+.apple-notch-brand.numana-brand.bemie-brand-letters-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Logo BEMIÊ: só as letras no sidebar, sem moldura ou caixa */
+.bemie-header-letters-logo {
+  height: 30px !important;
+  width: auto !important;
+  max-width: 175px !important;
+  object-fit: contain !important;
+  display: block !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
+}
+
+.bemie-header-letters-logo:hover {
+  opacity: 0.82 !important;
+  transform: scale(1.02) !important;
+}
+
+/* Submenu dropdown de Biquínis */
+.bemie-dropdown-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.bemie-nav-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  padding: 0.4rem 0;
+  min-width: 196px;
+  z-index: 10050;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  animation: bemieDropdownFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Ponte invisível para evitar fechamento ao mover o cursor do botão BIQUÍNIS até as opções */
+.bemie-nav-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -16px;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: transparent;
+}
+
+@keyframes bemieDropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.bemie-nav-dropdown-item {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding: 0.65rem 1.25rem;
+  text-align: left;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: #1c1510 !important;
+  transition: background-color 0.18s ease, color 0.18s ease;
+  white-space: nowrap;
+}
+
+.bemie-nav-dropdown-item:hover {
+  background-color: #f7f4ee !important;
+  color: #8c5835 !important;
+}
+
+.apple-notch-logo-badge.numana-logo-badge {
+  width: 7.6rem !important;
+  height: 4.55rem !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.apple-notch-logo-badge.numana-logo-badge .apple-notch-logo-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  transform: scale(1.18) !important;
+}
+
+.apple-notch-brand-text.numana-wordmark {
+  display: inline-block !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 2.15rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+  color: #1c1510 !important;
+  text-transform: lowercase !important;
+  line-height: 1 !important;
+}
+
+.apple-notch-nav.numana-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.apple-notch-link.numana-nav-link {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  color: #1c1510 !important;
+  padding: 0.45rem 0.7rem !important;
+  background: transparent !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.apple-notch-link.numana-nav-link:hover {
+  opacity: 0.65;
+  color: #754f34 !important;
+  background: transparent !important;
+}
+
+.numana-nav-caret {
+  font-size: 13px;
+  color: #1c1510;
+  opacity: 0.7;
+}
+
+.apple-notch-actions.numana-utilities {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.numana-utility-btn {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0.3rem;
+  color: #1c1510;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.numana-utility-btn:hover {
+  opacity: 0.55;
+}
+
+.apple-notch-cart-btn.numana-bag-trigger {
+  padding: 0.25rem 0.35rem !important;
+  color: #1c1510 !important;
+  position: relative;
+}
+
+.numana-bag-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apple-notch-cart-badge.numana-bag-count {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent !important;
+  color: #1c1510 !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  min-width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  line-height: 1;
+}
+
+/* Notificação vermelha no ícone do carrinho quando há itens adicionados */
+.apple-notch-cart-badge.numana-bag-count.is-notified,
+.eagle-cart-count {
+  position: absolute !important;
+  top: -6px !important;
+  right: -8px !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  background: #d92d20 !important;
+  background-color: #d92d20 !important;
+  color: #ffffff !important;
+  border-radius: 9999px !important;
+  min-width: 17px !important;
+  height: 17px !important;
+  padding: 0 4px !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 6px rgba(217, 45, 32, 0.38) !important;
+  border: 1.5px solid #ffffff !important;
+}
+
+.apple-notch-cta.numana-header-cta {
+  background: #1c1510 !important;
+  border: 1px solid #1c1510 !important;
+}
+
+.apple-notch-cta.numana-header-cta .apple-notch-cta-label {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  padding: 0.52rem 0.9rem !important;
+  background: #1c1510 !important;
+  color: #f3e9dc !important;
+}
+
+/* 2. HERO SECTION PANORÂMICA COM EFEITO SOLAR DE VERÃO CLARO E ILUMINADO */
+.hero.site-hero.numana-hero {
+  margin-top: 0 !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  background-color: #f3e9dc !important;
+  padding: 0 !important;
+  display: block !important;
+  border-bottom: 1px solid #d9c2a6 !important;
+}
+
+.site-hero-media.numana-hero-media {
+  position: relative !important;
+  inset: auto !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  aspect-ratio: 3904 / 1088 !important;
+  min-height: clamp(260px, 31vw, 440px) !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  box-shadow: none !important;
+  background-color: #f3e9dc !important;
+  overflow: hidden !important;
+}
+
+.hero.site-hero.numana-hero .site-hero-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+  filter: none !important;
+}
+
+/* Efeito solar de verão leve e iluminado sobre a imagem (sem escurecer a foto) */
+.site-hero-color-filter {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 82% 18%,
+      rgba(255, 252, 238, 0.36) 0%,
+      rgba(255, 238, 204, 0.14) 36%,
+      rgba(255, 255, 255, 0) 68%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 251, 244, 0.1) 0%,
+      rgba(255, 246, 232, 0.02) 56%,
+      rgba(239, 227, 211, 0.24) 100%
+    );
+  mix-blend-mode: normal;
+}
+
+.site-hero-overlay.numana-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 70%,
+    rgba(239, 227, 211, 0.38) 100%
+  ) !important;
+}
+
+.numana-hero-frame {
+  position: absolute;
+  inset: 12px;
+  z-index: 3;
+  pointer-events: none;
+  border: 1px solid rgba(255, 250, 242, 0.55);
+}
+
+.numana-hero-caption {
+  position: absolute;
+  left: calc(2.5vw + 6px);
+  right: calc(2.5vw + 6px);
+  bottom: 1.25rem;
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.numana-hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.34rem;
+  background: linear-gradient(135deg, rgba(250, 244, 236, 0.90) 0%, rgba(239, 227, 211, 0.78) 100%);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(217, 194, 166, 0.92);
+  border-left: 3px solid #7b5238;
+  padding: 0.78rem 1.38rem;
+  box-shadow: 0 14px 34px rgba(28, 21, 16, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.numana-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'DM Mono', 'Work Sans', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6e4830;
+  text-shadow: none;
+}
+
+.numana-hero-kicker-line {
+  width: 26px;
+  height: 1.5px;
+  background: linear-gradient(90deg, #7b5238 0%, rgba(123, 82, 56, 0.25) 100%);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.numana-hero-sub {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.11em !important;
+  line-height: 1.35 !important;
+  text-transform: uppercase !important;
+  color: #1c1510 !important;
+  margin: 0 !important;
+  text-shadow: none;
+}
+
+.numana-hero-btn {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #1c1510;
+  color: #f3e9dc;
+  border: 1px solid #1c1510;
+  padding: 0.72rem 1.35rem;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+}
+
+.numana-hero-btn:hover {
+  background: #efe3d3;
+  color: #1c1510;
+  border-color: #1c1510;
+}
+
+/* Linha vertical arquitetônica inspirada em blank-canvas ao final da contagem/hero */
+.bemie-hero-vertical-divider {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.bemie-hero-vertical-line {
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(180deg, rgba(217, 194, 166, 0.95) 0%, rgba(28, 21, 16, 0.35) 100%);
+  animation: heroLinePulse 2.4s ease-in-out infinite;
+  display: block;
+  transform-origin: top;
+}
+
+@keyframes heroLinePulse {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+    transform-origin: top;
+  }
+  50.1% {
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    opacity: 0;
+    transform-origin: bottom;
+  }
+}
+
+/* 3. LOOKBOOK / BANNERS EDITORIAIS DE 3 COLUNAS COM BORDAS RETAS E PROPORÇÃO 1:1 NOS CARDS (.listing) */
+#page2 {
+  min-height: auto !important;
+  padding: 8px 8px 12px !important;
+  gap: 8px !important;
+  background-color: #ffffff !important;
+}
+
+#page2 .elem {
+  height: clamp(460px, 70vh, 640px) !important;
+  max-height: 640px !important;
+  width: calc((100% - 16px) / 3) !important;
+  background-color: #141313 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  box-shadow: none !important;
+  border: none !important;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.numana-banner-watermark {
+  position: absolute;
+  left: 1.5rem;
+  bottom: 1.4rem;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  pointer-events: none;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+  transition: opacity 0.25s ease;
+}
+
+#page2 .elem:has(.dets:hover) .numana-banner-watermark {
+  opacity: 0.16;
+}
+
+.numana-banner-title {
+  font-family: 'Oswald', 'Work Sans', sans-serif;
+  font-size: clamp(2.1rem, 3.6vw, 3.3rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  text-transform: lowercase;
+  color: rgba(242, 237, 230, 0.88);
+}
+
+.numana-banner-sub {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+#page2 .elem .dets {
+  top: 44% !important;
+  bottom: auto !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: min(210px, calc(100% - 32px)) !important;
+  z-index: 10 !important;
+  transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1), top 0.32s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+#page2 .elem .dets:hover {
+  top: 30% !important;
+  width: min(356px, calc(100% - 16px)) !important;
+}
+
+#page2 .dets .dets-info {
+  width: 100% !important;
+  height: 34px !important;
+  padding: 0 13px !important;
+  font-size: 11px !important;
+  font-family: 'Work Sans', sans-serif !important;
+  background-color: #efe3d3 !important;
+  border: 1px solid rgba(0, 0, 0, 0.16) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14) !important;
+}
+
+#page2 .dets .dets-info p {
+  font-size: 10.5px !important;
+  letter-spacing: 0.08em !important;
+}
+
+#page2 .dets .dets-info i {
+  font-size: 12px !important;
+}
+
+#page2 .dets .dets-info .ri-circle-fill {
+  font-size: 6px !important;
+}
+
+#page2 .dets .dets-container {
+  width: 100% !important;
+  height: 34px !important;
+  padding-top: 34px !important;
+  background-color: #efe3d3 !important;
+  border: 1px solid rgba(0, 0, 0, 0.16) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22) !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: height 0.34s cubic-bezier(0.22, 0.57, 0.12, 0.96), opacity 0.22s ease !important;
+}
+
+#page2 .dets:hover .dets-container {
+  height: 308px !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#page2 .dets-container .listing {
+  width: 100% !important;
+  height: 274px !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  padding: 10px 10px 12px !important;
+  align-items: start !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+#page2 .listing .list-elem {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 3px !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+}
+
+#page2 .listing .list-elem:hover {
+  background-color: rgba(20, 19, 19, 0.06) !important;
+  transform: translateY(-2px) !important;
+}
+
+#page2 .list-elem .img-cont {
+  width: 100% !important;
+  aspect-ratio: 3 / 4 !important;
+  height: 210px !important;
+  max-height: 210px !important;
+  overflow: hidden !important;
+  background-color: #e4d6c4 !important;
+  border: 1px solid rgba(20, 19, 19, 0.12) !important;
+  flex-shrink: 0 !important;
+}
+
+#page2 .list-elem .img-cont img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  transform: scale(1) !important;
+  display: block !important;
+}
+
+#page2 .list-elem p {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  line-height: 1.22 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  color: #141313 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+/* 4. SEÇÃO DE DESTAQUES EMPILHADOS EM BEGE (#efe3d3) COM ESPAÇAMENTOS COMPACTOS E BORDAS RETAS */
+.featured-projects-container {
+  padding: 1.5rem 0 0 !important;
+  background-color: #ffffff !important;
+}
+
+.featured-projects-container > .container {
+  padding: 0 14px 0.65rem !important;
+  height: auto !important;
+  max-width: 1120px !important;
+}
+
+.featured-projects-container .featured-projects-header-callout {
+  margin-bottom: 0.25rem !important;
+}
+
+.featured-projects-container .featured-projects-header-callout p {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  color: #524a42 !important;
+}
+
+.featured-projects-container .featured-projects-header {
+  width: 100% !important;
+  max-width: 64rem !important;
+  margin: 0 auto 0.35rem !important;
+}
+
+.featured-projects-container .featured-projects-header h2 {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: clamp(1.2rem, 1.85vw, 1.6rem) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+  color: #000000 !important;
+  line-height: 1.25 !important;
+}
+
+.featured-projects {
+  padding: 0.25rem 14px 1.25rem !important;
+  background-color: #ffffff !important;
+}
+
+.featured-projects .featured-project-card {
+  position: sticky !important;
+  top: 24px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin-bottom: 1.35rem !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+.featured-projects .featured-project-card:last-child {
+  margin-bottom: 0 !important;
+}
+
+.featured-projects .featured-project-card-inner {
+  padding: 1.5rem 2rem !important;
+  gap: clamp(1.5rem, 2.5vw, 2.25rem) !important;
+  max-width: 1080px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  height: clamp(390px, 50svh, 450px) !important;
+}
+
+.featured-projects .featured-project-card-content {
+  flex: 1.05 !important;
+}
+
+.featured-projects .featured-project-card-description {
+  max-width: 100% !important;
+}
+
+.featured-projects .featured-project-card-media-col {
+  flex: 0.95 !important;
+}
+
+.featured-projects .featured-project-card-title h2 {
+  font-family: 'Work Sans', sans-serif !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+}
+
+.featured-projects .featured-project-card-description p.lg {
+  font-family: 'Work Sans', sans-serif !important;
+}
+
+/* 5. CATÁLOGO ESTILO NUMANA (FUNDO BRANCO GALERIA, 4 COLUNAS, BORDAS RETAS, WORK SANS) */
+.bemie-catalog-section.numana-catalog-section,
+.bemie-catalog-section.numana-catalog-section > .container {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.bemie-catalog-section.numana-catalog-section {
+  padding: 1.5rem 0 3.5rem !important;
+  border-top: 1px solid #e8e8e8;
+}
+
+.bemie-catalog-section .container.numana-catalog-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 14px !important;
+}
+
+.bemie-catalog-header.numana-catalog-header {
+  gap: 1.35rem !important;
+  margin-bottom: 1.75rem !important;
+  padding: 0 4px;
+}
+
+.bemie-catalog-title-block.numana-catalog-title-block {
+  text-align: left !important;
+  max-width: none !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.bemie-eyebrow.numana-eyebrow {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  color: #666666 !important;
+  margin: 0 !important;
+}
+
+.bemie-catalog-title-block.numana-catalog-title-block h2 {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: #000000 !important;
+  margin: 0 !important;
+}
+
+.bemie-catalog-toolbar.numana-catalog-toolbar {
+  background: #ffffff !important;
+  border: 1px solid #e2e2e2 !important;
+  box-shadow: none !important;
+  padding: 0.85rem 1rem !important;
+  gap: 1rem !important;
+}
+
+.bemie-filter-chip {
+  background: #ffffff !important;
+  border: 1px solid #d8d8d8 !important;
+  color: #141313 !important;
+  padding: 0.48rem 0.9rem !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11.5px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  box-shadow: none !important;
+}
+
+.bemie-filter-chip:hover {
+  border-color: #000000 !important;
+  color: #000000 !important;
+  background: #f7f7f7 !important;
+  transform: none !important;
+}
+
+.bemie-filter-chip.active {
+  background: #000000 !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+.bemie-search-input {
+  background: #ffffff !important;
+  border: 1px solid #d8d8d8 !important;
+  color: #000000 !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11.5px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.03em !important;
+  padding: 0.58rem 2.2rem 0.58rem 2.35rem !important;
+}
+
+.bemie-search-input:focus {
+  border-color: #000000 !important;
+  box-shadow: none !important;
+}
+
+.bemie-search-input::placeholder {
+  color: #777777 !important;
+  font-family: 'Work Sans', sans-serif !important;
+}
+
+.bemie-search-icon {
+  color: #333333 !important;
+  left: 0.85rem !important;
+}
+
+.bemie-search-clear {
+  background: #ededed !important;
+  color: #000000 !important;
+}
+
+/* Grade de 4 colunas estilo Numana (#page3.numana-catalog-grid) */
+#page3.bemie-eagle-page3.numana-catalog-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  column-gap: 10px !important;
+  row-gap: 34px !important;
+  padding: 0.5rem 0 2rem !important;
+  min-height: auto !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+#page3.numana-catalog-grid .child.numana-product-card {
+  width: 100% !important;
+  max-width: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 0.45rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+  /* Aceleração de hardware e will-change para rolagem a 60/120fps */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: 260px 480px;
+}
+
+#page3.numana-catalog-grid .child.is-highlighted-child .child-media-wrap {
+  outline: 2px solid #000000 !important;
+  box-shadow: none !important;
+}
+
+#page3.numana-catalog-grid .child .child-media-wrap {
+  width: 100% !important;
+  max-width: none !important;
+  aspect-ratio: 3 / 4 !important;
+  background: #f4f2ef !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.bemie-zoom-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.bemie-zoom-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, transform-origin;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+#page3.numana-catalog-grid .child .child-badge.bemie-discount-pill {
+  top: 0.65rem !important;
+  left: 0.65rem !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  padding: 0.28rem 0.55rem !important;
+  box-shadow: none !important;
+}
+
+#page3.numana-catalog-grid .bemie-grid-thumbs {
+  margin: 0 !important;
+  padding: 0.2rem 0 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  justify-content: flex-start !important;
+  gap: 0.35rem !important;
+}
+
+#page3.numana-catalog-grid .bemie-grid-thumb-preview {
+  width: 2rem !important;
+  height: 2.6rem !important;
+  border: 1px solid #d4d4d4 !important;
+  background: #f4f2ef !important;
+  box-shadow: none !important;
+}
+
+#page3.numana-catalog-grid .bemie-grid-thumb-preview.active {
+  border: 1.5px solid #000000 !important;
+  box-shadow: none !important;
+}
+
+/* Compensação de scroll para o cabeçalho fixo Numana de 92px */
+#page2,
+.featured-projects-container,
+.bemie-catalog-section,
+#page3,
+.cta-window,
+#instagram,
+.numana-instafeed-section {
+  scroll-margin-top: 96px;
+}
+
+#page3.numana-catalog-grid .child .childInfo.numana-card-info {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  text-align: left !important;
+  align-items: stretch !important;
+  max-width: none !important;
+  width: 100% !important;
+  gap: 0.22rem !important;
+  padding: 0.2rem 0.1rem 0 !important;
+}
+
+.numana-card-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 2.75em;
+}
+
+#page3.numana-catalog-grid .child .childInfo .child-title {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
+  color: #000000 !important;
+  line-height: 1.35 !important;
+  text-align: left !important;
+}
+
+.numana-card-bag-btn {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0 0.15rem;
+  color: #000000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.numana-card-bag-btn:hover {
+  opacity: 0.55;
+  transform: translateY(-1px);
+}
+
+#page3.numana-catalog-grid .child .childInfo .child-price-line.numana-price-line {
+  justify-content: flex-start !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+  gap: 0.45rem !important;
+  margin-top: 0.05rem;
+}
+
+#page3.numana-catalog-grid .child .childInfo .bemie-price-old {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #888888 !important;
+}
+
+.numana-transfer-price {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 10.5px !important;
+  font-weight: 400 !important;
+  color: #333333 !important;
+  margin: 0 !important;
+  line-height: 1.35 !important;
+  text-align: left !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+#page3.numana-catalog-grid .child-style-tags {
+  justify-content: flex-start !important;
+  gap: 0.28rem !important;
+  margin: 0.2rem 0 0.25rem !important;
+}
+
+#page3.numana-catalog-grid .child-style-tag-pill {
+  background: #f7f7f7 !important;
+  border: 1px solid #e0e0e0 !important;
+  color: #333333 !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 9.5px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.03em !important;
+  padding: 0.14rem 0.45rem !important;
+}
+
+#page3.numana-catalog-grid .child-style-tag-pill:hover {
+  background: #000000 !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+#page3.numana-catalog-grid .child .childInfo .child-controls.numana-card-controls {
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 0.45rem !important;
+  margin-top: auto !important;
+  padding-top: 0.4rem;
+  border-top: 1px solid #eeeeee;
+  width: 100%;
+}
+
+#page3.numana-catalog-grid .child .bemie-size-picker {
+  gap: 0.25rem !important;
+}
+
+#page3.numana-catalog-grid .child .bemie-size-btn {
+  width: 1.85rem !important;
+  height: 1.85rem !important;
+  min-width: 1.85rem !important;
+  background: #ffffff !important;
+  border: 1px solid #cccccc !important;
+  color: #000000 !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+}
+
+#page3.numana-catalog-grid .child .bemie-size-btn:hover:not(:disabled) {
+  border-color: #000000 !important;
+  background: #f5f5f5 !important;
+  color: #000000 !important;
+}
+
+#page3.numana-catalog-grid .child .bemie-size-btn.active {
+  background: #000000 !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+#page3.numana-catalog-grid .bemie-child-buy-btn {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #000000 !important;
+  height: 1.85rem !important;
+  padding: 0 0.75rem !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+}
+
+#page3.numana-catalog-grid .bemie-child-buy-btn:hover {
+  background: #333333 !important;
+  border-color: #333333 !important;
+  color: #ffffff !important;
+  transform: none !important;
+}
+
+.bemie-catalog-empty {
+  grid-column: 1 / -1;
+  background: #f9f9f9 !important;
+  border: 1px solid #e0e0e0 !important;
+  color: #000000 !important;
+}
+
+.bemie-catalog-empty-title {
+  color: #000000 !important;
+  font-family: 'Work Sans', sans-serif !important;
+}
+
+.bemie-catalog-empty-sub {
+  color: #555555 !important;
+  font-family: 'Work Sans', sans-serif !important;
+}
+
+/* 6. GRADE HORIZONTAL DE FOTOS DO INSTAGRAM (@bemiemodapraia — ESTILO NUMANA) */
+.numana-instafeed-section {
+  width: 100%;
+  background-color: #ffffff;
+  border-top: 1px solid #e5e5e5;
+  padding: 1.75rem 0 2.75rem;
+}
+
+.numana-instafeed-header {
+  padding: 0 14px 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.numana-instafeed-handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: #000000;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: opacity 0.2s ease;
+}
+
+.numana-instafeed-handle i {
+  font-size: 15px;
+}
+
+.numana-instafeed-handle:hover {
+  opacity: 0.6;
+}
+
+.numana-instafeed-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0 12px;
+}
+
+.numana-instafeed-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.08;
+  overflow: hidden;
+  background-color: #f4f2ef;
+  display: block;
+  text-decoration: none;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: 180px 200px;
+}
+
+.numana-instafeed-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 24%;
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.numana-instafeed-item:nth-child(3) .numana-instafeed-img {
+  object-position: center center;
+}
+
+.numana-instafeed-item:hover .numana-instafeed-img {
+  transform: scale(1.04);
+}
+
+.numana-instafeed-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.26);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.numana-instafeed-item:hover .numana-instafeed-overlay {
+  opacity: 1;
+}
+
+.numana-instafeed-overlay i {
+  font-size: 1.35rem;
+}
+
+.numana-instafeed-caption {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+/* 7. RODAPÉ ARQUITETÔNICO MINIMALISTA (ESTILO NUMANA) */
+.footer.numana-footer {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-top: 1px solid #e5e5e5 !important;
+  padding: 3.5rem 2.5vw 2rem !important;
+}
+
+.numana-footer-main {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+.numana-footer-heading {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: #000000 !important;
+  margin: 0 0 1.1rem 0 !important;
+}
+
+.numana-newsletter-form {
+  display: flex;
+  align-items: stretch;
+  max-width: 340px;
+  border: 1px solid #999999;
+  background: #ffffff;
+}
+
+.numana-newsletter-input {
+  flex: 1;
+  border: none !important;
+  background: transparent !important;
+  padding: 0.65rem 0.85rem !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 12px !important;
+  color: #000000 !important;
+  outline: none !important;
+}
+
+.numana-newsletter-submit {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0 0.9rem;
+  font-size: 15px;
+  color: #000000;
+  transition: opacity 0.2s ease;
+}
+
+.numana-newsletter-submit:hover {
+  opacity: 0.55;
+}
+
+.numana-newsletter-feedback {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11.5px !important;
+  color: #34495e !important;
+  margin-top: 0.55rem !important;
+}
+
+.numana-footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.numana-footer-list li,
+.numana-footer-list a {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #000000 !important;
+  text-decoration: none;
+}
+
+.numana-footer-list a:hover {
+  opacity: 0.6;
+}
+
+.numana-footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 1.1rem;
+}
+
+.numana-social-link {
+  color: #000000;
+  font-size: 17px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.numana-social-link:hover {
+  opacity: 0.55;
+}
+
+.numana-footer-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.numana-footer-link {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+  color: #000000 !important;
+  text-align: left;
+  transition: opacity 0.2s ease;
+}
+
+.numana-footer-link:hover {
+  opacity: 0.55;
+}
+
+.numana-footer-bottom {
+  background-color: #efe3d3 !important;
+  background: #efe3d3 !important;
+  border-top: 1px solid #d9c2a6 !important;
+  margin: 0 -2.5vw -2rem !important;
+  padding: 1.5rem 2.5vw !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.numana-footer-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.numana-footer-mini-logo {
+  width: 5.8rem !important;
+  height: 3.6rem !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  border: 1px solid #d9c2a6;
+}
+
+.bemie-drawer-brand-img {
+  width: 5.2rem !important;
+  height: 3.3rem !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+
+.numana-copyright-title,
+.numana-copyright-sub,
+.numana-footer-legal p {
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #1c1510 !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+/* RESPONSIVIDADE DO LAYOUT NUMANA */
+@media (max-width: 1120px) {
+  #page3.bemie-eagle-page3.numana-catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: 12px !important;
+    row-gap: 28px !important;
+  }
+  .numana-instafeed-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .featured-projects .featured-project-card {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin-bottom: 1rem !important;
+  }
+  .featured-projects .featured-project-card-inner {
+    padding: 1.15rem 1rem !important;
+    gap: 0.75rem !important;
+    height: clamp(420px, 64svh, 500px) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .apple-notch-nav.numana-nav {
+    display: none !important;
+  }
+  #page2 {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  #page2 .elem {
+    width: 100% !important;
+    height: 62vh !important;
+  }
+  .numana-footer-main {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .numana-adbar-text {
+    font-size: 10px !important;
+  }
+  .apple-notch-inner.numana-header-main {
+    height: 66px !important;
+    padding: 0 12px !important;
+  }
+  .apple-notch-logo-badge.numana-logo-badge {
+    width: 5.5rem !important;
+    height: 3.4rem !important;
+  }
+  .apple-notch-brand-text.numana-wordmark {
+    font-size: 1.7rem !important;
+  }
+  .apple-notch-cta.numana-header-cta {
+    display: none !important;
+  }
+  .hero.site-hero.numana-hero {
+    margin-top: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+  .site-hero-media.numana-hero-media {
+    min-height: 230px !important;
+  }
+  .numana-hero-frame {
+    inset: 8px !important;
+  }
+  .numana-hero-caption {
+    left: 16px !important;
+    right: 16px !important;
+    bottom: 0.85rem !important;
+    flex-direction: row !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+    gap: 0.5rem !important;
+    flex-wrap: nowrap !important;
+  }
+  .numana-hero-copy {
+    padding: 0.42rem 0.7rem !important;
+  }
+  .numana-hero-kicker {
+    font-size: 8px !important;
+    letter-spacing: 0.08em !important;
+    gap: 0.3rem !important;
+  }
+  .numana-hero-kicker-line {
+    width: 12px !important;
+  }
+  .numana-hero-sub {
+    display: block !important;
+    font-size: 9px !important;
+    letter-spacing: 0.04em !important;
+  }
+  .numana-hero-btn {
+    padding: 0.45rem 0.72rem !important;
+    font-size: 9px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+  #page3.bemie-eagle-page3.numana-catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: 8px !important;
+    row-gap: 22px !important;
+  }
+  #page3.numana-catalog-grid .child .childInfo .child-controls.numana-card-controls {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  #page3.numana-catalog-grid .bemie-child-buy-btn {
+    width: 100% !important;
+  }
+  .numana-instafeed-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+/* =========================================================
+   CARROSSEL INFINITO (TRUST MARQUEE / TRUST BAR PIXEL PERFECT)
+   ========================================================= */
+@keyframes scroll-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll-left 52s linear infinite;
+  will-change: transform;
+}
+
+.bemie-trust-marquee-wrapper {
+  background-color: #0c0b0a !important;
+  color: #ffffff !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+  position: relative !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  padding: 0.52rem 0 !important;
+  z-index: 20 !important;
+  user-select: none !important;
+}
+
+.bemie-trust-track {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  width: max-content !important;
+  pointer-events: auto !important;
+}
+
+.bemie-trust-animate {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  animation: scroll-left 78s linear infinite !important;
+  will-change: transform !important;
+}
+
+.bemie-trust-marquee-wrapper:hover .bemie-trust-animate {
+  animation-play-state: paused !important;
+}
+
+.bemie-trust-item {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  gap: 0.75rem !important;
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+}
+
+.bemie-trust-text {
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 450 !important;
+  letter-spacing: 0.035em !important;
+  color: #ece7e1 !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+.bemie-trust-text .bemie-trust-bold {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+}
+
+.bemie-trust-text .bemie-trust-serif {
+  color: #ffffff !important;
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-style: italic !important;
+  font-weight: 500 !important;
+}
+
+.bemie-trust-dot {
+  width: 5px !important;
+  height: 5px !important;
+  border-radius: 9999px !important;
+  background-color: rgba(255, 255, 255, 0.28) !important;
+  margin-left: 1.25rem !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
+}
+
+.bemie-trust-mask-left {
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100px !important;
+  background: linear-gradient(to right, #0c0b0a 0%, rgba(12, 11, 10, 0.85) 45%, rgba(12, 11, 10, 0) 100%) !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+.bemie-trust-mask-right {
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 100px !important;
+  background: linear-gradient(to left, #0c0b0a 0%, rgba(12, 11, 10, 0.85) 45%, rgba(12, 11, 10, 0) 100%) !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+/* =========================================================
+   EFEITOS DE CARREGAMENTO E APARIÇÃO DE FOTOS (NUMANA.COM.AR)
+   ========================================================= */
+[data-transition="fade-in-up"]:not(.elem) {
+  opacity: 0;
+  transform: translateY(30px) !important;
+  transition: opacity 1s ease, transform 1s ease !important;
+}
+
+[data-transition="fade-in-up"]:not(.elem).is-inViewport,
+[data-transition="fade-in-up"]:not(.elem)[data-in-viewport="true"] {
+  opacity: 1 !important;
+  transform: translateY(0) translateZ(0) !important;
+}
+
+/* Garantir que a seção e os 3 cards do Lookbook (#page2, .elem) permaneçam sempre visíveis e nunca fiquem brancos */
+#page2,
+#page2 .elem,
+#page2 .elem > img,
+#page2 .elem .elem-reel-video.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.2s ease, filter 0.25s ease, transform 0.8s ease;
+}
+
+.fade-in.lazyloaded {
+  opacity: 1;
+  filter: none;
+}
+
+.item-image-featured {
+  transition: opacity 0.25s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0.05s;
+}
+
+.textbanner-image-effect {
+  transition: all 0.8s ease !important;
+}
+
+.numana-banner-card:hover .textbanner-image-effect,
+.numana-banner-card:focus .textbanner-image-effect,
+.numana-instafeed-item:hover .textbanner-image-effect,
+.numana-instafeed-item:focus .textbanner-image-effect {
+  transform: scale(1.03) !important;
+}
+
+.placeholder-fade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(20, 19, 19, 0.14);
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 2;
+  animation: placeholder-fade 1.5s infinite;
+}
+
+@keyframes placeholder-fade {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+.lazyloaded + .placeholder-fade,
+.is-loaded > .placeholder-fade {
+  display: none !important;
+}
+
+

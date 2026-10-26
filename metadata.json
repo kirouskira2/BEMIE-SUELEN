@@ -1,0 +1,7 @@
+{
+  "name": "Bemiê Moda Praia",
+  "description": "Loja virtual Bemiê Moda Praia: catálogo exclusivo de biquínis, maiôs e moda praia com cálculo de desconto Pix, integração ViaCEP e checkout via WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

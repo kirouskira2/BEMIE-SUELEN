@@ -1,0 +1,289 @@
+[
+  {
+    "id": "p_bayopyq5",
+    "nome": "Biquíni Scarlet assa delta",
+    "cor": "Vermelho e preto",
+    "categoria": "biquinis",
+    "preco": 179.8,
+    "ofertaTipo": "desconto",
+    "descontoPercentual": 20,
+    "precoPromocional": 0,
+    "tamanho": "P, M",
+    "tamanhos": [
+      {
+        "q": 2,
+        "t": "P"
+      },
+      {
+        "q": 1,
+        "t": "M"
+      }
+    ],
+    "estoqueInicial": 3,
+    "photoCount": 4,
+    "photos": [
+      "/bemie/products/p_bayopyq5_0.jpg",
+      "/bemie/products/p_bayopyq5_1.jpg",
+      "/bemie/products/p_bayopyq5_2.jpg",
+      "/bemie/products/p_bayopyq5_3.jpg"
+    ]
+  },
+  {
+    "id": "p_icbso4d4",
+    "nome": "Biquíni búzios marquinha de amarrar PISTACHIO E MARROM CAFÉ",
+    "cor": "PISTACHO COM MARROM CAFÉ",
+    "categoria": "biquinis",
+    "preco": 139.9,
+    "ofertaTipo": "desconto",
+    "descontoPercentual": 20,
+    "precoPromocional": 0,
+    "tamanho": "P",
+    "tamanhos": [
+      {
+        "q": 3,
+        "t": "P"
+      }
+    ],
+    "estoqueInicial": 3,
+    "photoCount": 4,
+    "photos": [
+      "/bemie/products/p_icbso4d4_0.jpg",
+      "/bemie/products/p_icbso4d4_1.jpg",
+      "/bemie/products/p_icbso4d4_2.jpg",
+      "/bemie/products/p_icbso4d4_3.jpg"
+    ]
+  },
+  {
+    "id": "p_qiw632k8",
+    "nome": "Biquíni marquinha VERMELHO CEREJA E ROSA AREIA",
+    "cor": "Vermelho cereja e rosa areia",
+    "categoria": "biquinis",
+    "preco": 139.9,
+    "ofertaTipo": "desconto",
+    "descontoPercentual": 20,
+    "precoPromocional": 0,
+    "tamanho": "P, G",
+    "tamanhos": [
+      {
+        "q": 0,
+        "t": "P"
+      },
+      {
+        "q": 1,
+        "t": "G"
+      }
+    ],
+    "estoqueInicial": 1,
+    "photoCount": 4,
+    "photos": [
+      "/bemie/products/p_qiw632k8_0.jpg",
+      "/bemie/products/p_qiw632k8_1.jpg",
+      "/bemie/products/p_qiw632k8_2.jpg",
+      "/bemie/products/p_qiw632k8_3.jpg"
+    ]
+  },
+  {
+    "id": "p_6ltgmlin",
+    "nome": "Biquíni Hawai regulável Belle Bloom PROMO BAZAR",
+    "cor": "Vermelho e azul",
+    "categoria": "biquinis",
+    "preco": 111.84,
+    "ofertaTipo": "nenhuma",
+    "descontoPercentual": 0,
+    "precoPromocional": 0,
+    "tamanho": "P, M, G",
+    "tamanhos": [
+      {
+        "q": 2,
+        "t": "P"
+      },
+      {
+        "q": 1,
+        "t": "M"
+      },
+      {
+        "q": 1,
+        "t": "G"
+      }
+    ],
+    "estoqueInicial": 4,
+    "photoCount": 3,
+    "photos": [
+      "/bemie/products/p_6ltgmlin_0.jpg",
+      "/bemie/products/p_6ltgmlin_1.jpg",
+      "/bemie/products/p_6ltgmlin_2.jpg"
+    ]
+  },
+  {
+    "id": "p_5uzjr4qq",
+    "nome": "Biquíni Naomi PISTACHIO E MARROM CAFÉ",
+    "cor": "PISTACHIO E MARROM CAFÉ",
+    "categoria": "biquinis",
+    "preco": 159.9,
+    "ofertaTipo": "desconto",
+    "descontoPercentual": 20,
+    "precoPromocional": 0,
+    "tamanho": "P, M, G",
+    "tamanhos": [
+      {
+        "q": 1,
+        "t": "P"
+      },
+      {
+        "q": 1,
+        "t": "M"
+      },
+      {
+        "q": 1,
+        "t": "G"
+      }
+    ],
+    "estoqueInicial": 3,
+    "photoCount": 3,
+    "photos": [
+      "/bemie/products/p_5uzjr4qq_0.jpg",
+      "/bemie/products/p_5uzjr4qq_1.jpg",
+      "/bemie/products/p_5uzjr4qq_2.jpg"
+    ]
+  },
+  {
+    "id": "p_zaakzxfq",
+    "nome": "Biquíni Búzios marquinha VERDE CÍTRICO E AQUA",
+    "cor": "VERDE CÍTRICO E AQUA",
+    "categoria": "biquinis",
+    "preco": 139.9,
+    "ofertaTipo": "desconto",
+    "descontoPercentual": 20,
+    "precoPromocional": 0,
+    "tamanho": "P, M",
+    "tamanhos": [
+      {
+        "q": 1,
+        "t": "P"
+      },
+      {
+        "q": 1,
+        "t": "M"
+      }
+    ],
+    "estoqueInicial": 2,
+    "photoCount": 4,
+    "photos": [
+      "/bemie/products/p_zaakzxfq_0.jpg",
+      "/bemie/products/p_zaakzxfq_1.jpg",
+      "/bemie/products/p_zaakzxfq_2.jpg",
+      "/bemie/products/p_zaakzxfq_3.jpg"
+    ]
+  },
+  {
+    "id": "p_avylmc1b",
+    "nome": "Biquíni marquinha regulável POÁ AMORE MIO COM LISTRA",
+    "cor": "POÁ COM LISTRA",
+    "categoria": "biquinis",
+    "preco": 139.99,
+    "ofertaTipo": "desconto",
+    "descontoPercentual": 20,
+    "precoPromocional": 0,
+    "tamanho": "P",
+    "tamanhos": [
+      {
+        "q": 1,
+        "t": "P"
+      }
+    ],
+    "estoqueInicial": 1,
+    "photoCount": 2,
+    "photos": [
+      "/bemie/products/p_avylmc1b_0.jpg",
+      "/bemie/products/p_avylmc1b_1.jpg"
+    ]
+  },
+  {
+    "id": "p_52mz54z2",
+    "nome": "Biquíni Sofia - Rendinha",
+    "cor": "Branco",
+    "categoria": "biquinis",
+    "preco": 145.8,
+    "tamanho": "P, M, G",
+    "tamanhos": [
+      {
+        "q": 1,
+        "t": "P"
+      },
+      {
+        "q": 2,
+        "t": "M"
+      },
+      {
+        "q": 0,
+        "t": "G"
+      }
+    ],
+    "estoqueInicial": 3,
+    "photoCount": 1,
+    "photos": [
+      "/bemie/products/p_52mz54z2_0.jpg"
+    ]
+  },
+  {
+    "id": "p_dwsrre4l",
+    "nome": "BIQUÍNI HAWAI MARQUINHA DE AMARRAR | BOSSA",
+    "cor": "",
+    "categoria": "biquinis",
+    "preco": 139.9,
+    "tamanho": "P, M, G",
+    "tamanhos": [
+      {
+        "q": 1,
+        "t": "P"
+      },
+      {
+        "q": 2,
+        "t": "M"
+      },
+      {
+        "q": 0,
+        "t": "G"
+      }
+    ],
+    "estoqueInicial": 3,
+    "photoCount": 3,
+    "photos": [
+      "/bemie/products/p_dwsrre4l_0.jpg",
+      "/bemie/products/p_dwsrre4l_1.jpg",
+      "/bemie/products/p_dwsrre4l_2.jpg"
+    ]
+  },
+  {
+    "id": "p_wnba68hp",
+    "nome": "BIQUÍNI BÚZIOS ALÇA DUPLA MARQUINHA DE AMARRAR | TIEDYE COCONUT",
+    "cor": "Tie dye coconut",
+    "categoria": "biquinis",
+    "preco": 139.9,
+    "ofertaTipo": "nenhuma",
+    "descontoPercentual": 0,
+    "precoPromocional": 0,
+    "tamanho": "P, M, G",
+    "tamanhos": [
+      {
+        "q": 1,
+        "t": "P"
+      },
+      {
+        "q": 3,
+        "t": "M"
+      },
+      {
+        "q": 0,
+        "t": "G"
+      }
+    ],
+    "estoqueInicial": 4,
+    "photoCount": 3,
+    "photos": [
+      "/bemie/products/p_wnba68hp_0.jpg",
+      "/bemie/products/p_wnba68hp_1.jpg",
+      "/bemie/products/p_wnba68hp_2.jpg"
+    ]
+  }
+]
