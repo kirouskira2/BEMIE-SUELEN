@@ -401,19 +401,19 @@ test('calculatePixAndInstallments, shouldShowMouseBallCursor, and Instagram feed
   assert.equal(resolveRouteTargetSelector('#instagram'), '.numana-instafeed-section');
 });
 
-test('computeHeaderVisibility hides header when scrolling up and reveals when scrolling down', () => {
+test('computeHeaderVisibility hides header when scrolling down and reveals when scrolling up', () => {
   // At page top (scrollY <= 15), header is always visible
   assert.deepEqual(computeHeaderVisibility(0, 0, false), { isVisible: true, nextLastScrollY: 0 });
   assert.deepEqual(computeHeaderVisibility(10, 50, false), { isVisible: true, nextLastScrollY: 10 });
 
-  // Scrolling down past top (diff > 0): reveals header
-  const scrollDown = computeHeaderVisibility(200, 100, false);
-  assert.equal(scrollDown.isVisible, true);
+  // Scrolling down past top (diff > 0): hides header
+  const scrollDown = computeHeaderVisibility(200, 100, true);
+  assert.equal(scrollDown.isVisible, false);
   assert.equal(scrollDown.nextLastScrollY, 200);
 
-  // Scrolling up (diff < 0): hides header
-  const scrollUp = computeHeaderVisibility(150, 200, true);
-  assert.equal(scrollUp.isVisible, false);
+  // Scrolling up (diff < 0): reveals header
+  const scrollUp = computeHeaderVisibility(150, 200, false);
+  assert.equal(scrollUp.isVisible, true);
   assert.equal(scrollUp.nextLastScrollY, 150);
 
   // Small jitter within threshold (e.g. diff = 3 < 6): keeps previous visibility

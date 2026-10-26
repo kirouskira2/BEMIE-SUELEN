@@ -4,6 +4,7 @@ import { SplitText } from 'gsap/SplitText';
 import { CustomEase } from 'gsap/CustomEase';
 import { useLenis } from 'lenis/react';
 import { STORE_CONFIG } from '../data/siteData';
+import { computeHeaderVisibility } from '../utils/animationMath';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(SplitText, CustomEase);
@@ -14,14 +15,27 @@ interface MenuToggleProps {
   toggleMenu: () => void;
   cartCount: number;
   onOpenCart: () => void;
+  isVisible?: boolean;
 }
 
-export function MenuToggle({ isOpen, toggleMenu, cartCount, onOpenCart }: MenuToggleProps) {
+export function MenuToggle({
+  isOpen,
+  toggleMenu,
+  cartCount,
+  onOpenCart,
+  isVisible = true,
+}: MenuToggleProps) {
   return (
-    <div className="eagle-icons-hover-zone is-sidebar-visible">
+    <div
+      className={`eagle-icons-hover-zone ${
+        isVisible || isOpen ? 'is-visible' : 'is-hidden'
+      }`}
+    >
       <div
         id="icons"
-        className={`menu-toggle eagle-icons-pill ${isOpen ? 'opened' : 'closed'}`}
+        className={`menu-toggle eagle-icons-pill ${isOpen ? 'opened' : 'closed'} ${
+          isVisible || isOpen ? 'is-visible' : 'is-hidden'
+        }`}
       >
         <button
           type="button"
@@ -56,10 +70,52 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const lastScrollYRef = useRef(0);
+  const isNavVisibleRef = useRef(true);
   const menuRef = useRef<HTMLDivElement>(null);
   const isInitializedRef = useRef(false);
   const splitTextsRef = useRef<SplitText[]>([]);
   const lenis = useLenis();
+
+  useEffect(() => {
+    isNavVisibleRef.current = isNavVisible;
+  }, [isNavVisible]);
+
+  useLenis((lenis) => {
+    const result = computeHeaderVisibility(
+      lenis.scroll,
+      lastScrollYRef.current,
+      isNavVisibleRef.current
+    );
+    if (result.isVisible !== isNavVisibleRef.current) {
+      setIsNavVisible(result.isVisible);
+    }
+    lastScrollYRef.current = result.nextLastScrollY;
+  });
+
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY || document.documentElement.scrollTop || 0;
+        const result = computeHeaderVisibility(
+          currentY,
+          lastScrollYRef.current,
+          isNavVisibleRef.current
+        );
+        if (result.isVisible !== isNavVisibleRef.current) {
+          setIsNavVisible(result.isVisible);
+        }
+        lastScrollYRef.current = result.nextLastScrollY;
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (lenis) {
@@ -205,6 +261,7 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
         toggleMenu={toggleMenu}
         cartCount={cartCount}
         onOpenCart={onOpenCart}
+        isVisible={isNavVisible}
       />
       <div className="menu" ref={menuRef}>
         <div className="menu-wrapper">

@@ -2820,35 +2820,41 @@ body {
   pointer-events: auto !important;
 }
 
-/* Barra inferior #icons (Menu / Sacola) revelada ao passar o mouse na borda inferior para não sobrepor os cards centrais */
+/* Barra inferior #icons (Menu / Sacola) com auto-hide sincronizado ao scroll */
 .eagle-icons-hover-zone {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 220px;
-  height: 28px;
+  height: 64px;
   z-index: 1200;
-  pointer-events: auto;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: max(14px, env(safe-area-inset-bottom, 14px));
 }
 
-.eagle-icons-hover-zone:hover {
-  height: 76px;
+#icons.menu-toggle.eagle-icons-pill {
+  pointer-events: auto !important;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.32s ease !important;
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.09) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
 }
 
-.eagle-icons-hover-zone:not(:hover) #icons.menu-toggle.eagle-icons-pill:not(.opened) {
+#icons.menu-toggle.eagle-icons-pill.is-hidden:not(.opened) {
   transform: translate(-50%, calc(100% + 44px)) !important;
   opacity: 0 !important;
   pointer-events: none !important;
 }
 
-.eagle-icons-hover-zone:hover #icons.menu-toggle.eagle-icons-pill,
+#icons.menu-toggle.eagle-icons-pill.is-visible,
 #icons.menu-toggle.eagle-icons-pill.opened {
   transform: translateX(-50%) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  background-color: #ffffff !important;
-  border: 1px solid rgba(0, 0, 0, 0.09) !important;
 }
 
 /* Barra superior de promoções: preto conforme solicitado pelo usuário */
@@ -4666,5 +4672,257 @@ body {
 .is-loaded > .placeholder-fade {
   display: none !important;
 }
+
+/* =========================================================
+   OTIMIZAÇÕES AVANÇADAS PARA VERSÕES MOBILE (iOS / Android)
+   ========================================================= */
+
+html, body {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 768px) {
+  /* Evitar zoom automático do iOS Safari ao focar campos de texto */
+  input,
+  select,
+  textarea,
+  .bemie-search-input,
+  .bemie-checkout-form input {
+    font-size: 16px !important;
+  }
+
+  /* Preloader responsivo em telas menores */
+  .loader .counter .count .digit h1 {
+    font-size: clamp(4.5rem, 18vw, 6.5rem) !important;
+  }
+
+  /* Cabeçalho compacto em mobile */
+  .numana-adbar {
+    padding: 0.35rem 0.65rem !important;
+    min-height: 28px !important;
+  }
+  .numana-adbar-text {
+    font-size: 9.5px !important;
+    letter-spacing: 0.04em !important;
+  }
+  .apple-notch-inner.numana-header-main {
+    height: 56px !important;
+    padding: 0 14px !important;
+  }
+  .bemie-header-letters-logo {
+    height: 24px !important;
+    max-width: 140px !important;
+  }
+  .numana-utility-btn,
+  .numana-bag-trigger {
+    width: 42px !important;
+    height: 42px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Hero Section Mobile */
+  .hero.site-hero.numana-hero {
+    margin-top: 0 !important;
+    padding: 0 10px !important;
+  }
+  .site-hero-media.numana-hero-media {
+    border-radius: 1.25rem !important;
+    min-height: 280px !important;
+    max-height: 480px !important;
+    height: 54svh !important;
+  }
+  .numana-hero-frame {
+    inset: 8px !important;
+    border-radius: 1rem !important;
+  }
+  .numana-hero-caption {
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 12px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  .numana-hero-copy {
+    padding: 0.45rem 0.75rem !important;
+    border-radius: 8px !important;
+  }
+  .numana-hero-kicker {
+    font-size: 8px !important;
+  }
+  .numana-hero-sub {
+    font-size: 9px !important;
+    line-height: 1.3 !important;
+  }
+  .numana-hero-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.65rem 1rem !important;
+    font-size: 10px !important;
+    border-radius: 8px !important;
+  }
+
+  /* Lookbook Trio (#page2) em coluna única vertical fluida */
+  #page2 {
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding: 1.2rem 10px 2.2rem !important;
+    min-height: auto !important;
+  }
+  #page2 .elem {
+    width: 100% !important;
+    height: clamp(380px, 66svh, 520px) !important;
+    border-radius: 1.25rem !important;
+  }
+  #page2 .elem .dets {
+    top: auto !important;
+    bottom: 18px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: min(210px, calc(100% - 32px)) !important;
+  }
+  #page2 .dets .dets-info {
+    height: 34px !important;
+    padding: 0 14px !important;
+    font-size: 10.5px !important;
+    border-radius: 9999px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18) !important;
+  }
+  #page2 .elem .elem-reel-top-bar {
+    top: 0.85rem !important;
+    left: 0.85rem !important;
+    right: 0.85rem !important;
+  }
+
+  /* Catálogo e filtros horizontais com scroll touch */
+  .bemie-catalog-section {
+    padding: 1.8rem 10px 2.5rem !important;
+  }
+  .bemie-catalog-toolbar.numana-catalog-toolbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+    padding: 0.85rem 0.85rem !important;
+    border-radius: 1rem !important;
+  }
+  .bemie-filter-pills {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 6px !important;
+    padding-bottom: 4px !important;
+    scrollbar-width: none !important;
+  }
+  .bemie-filter-pills::-webkit-scrollbar {
+    display: none !important;
+  }
+  .bemie-filter-chip {
+    flex-shrink: 0 !important;
+    padding: 0.45rem 0.85rem !important;
+    font-size: 10.5px !important;
+    border-radius: 9999px !important;
+    min-height: 34px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+  .bemie-search-wrap {
+    width: 100% !important;
+  }
+
+  /* Grid do Catálogo em 2 colunas com proporção perfeita */
+  #page3.bemie-eagle-page3.numana-catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: 8px !important;
+    row-gap: 20px !important;
+    padding: 0.5rem 0 1.5rem !important;
+  }
+  #page3.numana-catalog-grid .child .child-media-wrap {
+    border-radius: 10px !important;
+  }
+  #page3.numana-catalog-grid .child .childInfo .child-title {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+  }
+  #page3.numana-catalog-grid .child .childInfo .child-price-line.numana-price-line {
+    font-size: 11px !important;
+  }
+  #page3.numana-catalog-grid .child .bemie-size-picker {
+    gap: 4px !important;
+    flex-wrap: wrap !important;
+  }
+  #page3.numana-catalog-grid .child .bemie-size-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    font-size: 10px !important;
+    border-radius: 6px !important;
+  }
+  #page3.numana-catalog-grid .bemie-child-buy-btn {
+    height: 34px !important;
+    font-size: 10px !important;
+    border-radius: 6px !important;
+  }
+
+  /* Carrinho em gaveta 100% tela no mobile */
+  .bemie-drawer {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    height: 100svh !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+  }
+  .bemie-drawer-header {
+    padding: 1.1rem 1.15rem 0.95rem !important;
+  }
+  .bemie-drawer-body {
+    padding: 0.95rem 1.15rem !important;
+  }
+  .bemie-drawer-footer {
+    padding: 1.15rem 1.15rem max(1.2rem, calc(env(safe-area-inset-bottom, 14px) + 0.6rem)) !important;
+  }
+
+  /* Marquee de Confiança Mobile */
+  .bemie-trust-marquee-wrapper {
+    padding: 0.42rem 0 !important;
+  }
+  .bemie-trust-item {
+    gap: 0.5rem !important;
+    padding-left: 0.85rem !important;
+    padding-right: 0.85rem !important;
+  }
+  .bemie-trust-text {
+    font-size: 11.5px !important;
+  }
+
+  /* Instagram Grid Mobile */
+  .numana-instafeed-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    padding: 0 10px !important;
+  }
+  .numana-instafeed-header {
+    padding: 1.5rem 10px 0.85rem !important;
+  }
+
+  /* Menu fullscreen adaptado */
+  .menu .menu-wrapper {
+    padding: 5rem 1.5rem 2.5rem !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .menu .links .link a h2 {
+    font-size: clamp(1.8rem, 8vw, 2.8rem) !important;
+  }
+  .menu .socials {
+    flex-direction: column !important;
+    gap: 1.25rem !important;
+  }
+}
+
 
 

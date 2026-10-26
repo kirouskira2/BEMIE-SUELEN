@@ -621,8 +621,8 @@ export function shouldShowMouseBallCursor(params: {
 /**
  * Calculates topbar / navigation visibility based on scroll direction.
  * In accordance with user preference:
- * - Hidden when scrolling up (subindo com scroll)
- * - Shown when scrolling down (descendo com scroll)
+ * - Hidden when scrolling down (ao descer o scroll sumir o sidebar)
+ * - Shown when scrolling up (ao subir o scroll aparecer o sidebar)
  * - Always shown at page top (scrollY <= topAnchor)
  */
 export function computeHeaderVisibility(
@@ -640,10 +640,10 @@ export function computeHeaderVisibility(
   if (Math.abs(diff) < threshold) {
     return { isVisible: prevVisibility, nextLastScrollY: lastScrollY };
   }
-  // User: "deixe o sidebar oculto quando subir com scroll e mostre quando descer"
-  // Scrolling down (diff > 0): visible
-  // Scrolling up (diff < 0): hidden
-  return { isVisible: diff > 0, nextLastScrollY: current };
+  // User: "agora é ao contrario, quando descer o scroll sumir o sidebar e quando subir aparecer"
+  // Scrolling down (diff > 0): hidden
+  // Scrolling up (diff < 0): visible
+  return { isVisible: diff < 0, nextLastScrollY: current };
 }
 
 /**
