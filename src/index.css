@@ -2747,7 +2747,6 @@ body {
 .cta-window .container,
 .cta-window .cta-window-img-wrapper,
 .cta-window .cta-window-img-wrapper img,
-.cta-window .cta-window-img-overlay,
 .numana-instafeed-item,
 .numana-instafeed-img,
 .bemie-drawer,
@@ -4808,26 +4807,61 @@ html, body {
     padding: 0.85rem 0.85rem !important;
     border-radius: 1rem !important;
   }
+  /* =========================================================
+     FILTER PILLS — MOBILE SCROLL HORIZONTAL (MELHORES PRÁTICAS)
+     • overscroll-behavior-x: contain  → impede propagação do scroll para a página
+     • mask-image                       → fade visual nas bordas indicando que há mais itens
+     • touch-action: pan-x             → garante resposta só ao arrastar horizontal
+     • scroll-snap                      → ancoragem suave nos chips
+     • min-height: 44px                 → WCAG / Apple HIG mínimo de touch target
+     ========================================================= */
   .bemie-filter-pills {
     display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
+    overscroll-behavior-x: contain !important;
     -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x !important;
     gap: 6px !important;
-    padding-bottom: 4px !important;
+    /* Padding lateral p/ o primeiro/último chip não colarem na borda */
+    padding: 4px 16px 8px !important;
     scrollbar-width: none !important;
+    /* Fade nas bordas: indica conteúdo além da tela (iOS/Android pattern) */
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      #000 20px,
+      #000 calc(100% - 20px),
+      transparent 100%
+    ) !important;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      #000 20px,
+      #000 calc(100% - 20px),
+      transparent 100%
+    ) !important;
+    /* Scroll snap para ancoragem suave */
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
   }
   .bemie-filter-pills::-webkit-scrollbar {
     display: none !important;
   }
   .bemie-filter-chip {
     flex-shrink: 0 !important;
-    padding: 0.45rem 0.85rem !important;
-    font-size: 10.5px !important;
+    padding: 0 1rem !important;
+    font-size: 11px !important;
     border-radius: 9999px !important;
-    min-height: 34px !important;
+    /* Touch target mínimo 44px conforme Apple HIG e WCAG 2.5.5 */
+    min-height: 44px !important;
+    height: 44px !important;
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    /* Snap no início de cada chip */
+    scroll-snap-align: start !important;
   }
   .bemie-search-wrap {
     width: 100% !important;
@@ -4868,9 +4902,12 @@ html, body {
   }
 
   /* Carrinho em gaveta 100% tela no mobile */
+  .bemie-drawer-backdrop {
+    justify-content: center !important;
+  }
   .bemie-drawer {
-    width: 100vw !important;
-    max-width: 100vw !important;
+    width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
     height: 100svh !important;
     border-radius: 0 !important;
@@ -4922,6 +4959,42 @@ html, body {
     flex-direction: column !important;
     gap: 1.25rem !important;
   }
+}
+
+/* =========================================================
+   CTA WINDOW — OVERLAY MOBILE (MELHORES PRÁTICAS)
+   Problema: .cta-window-img-overlay estava no reset border-radius: 0px
+   global que zerrava o raio, mas o container pai já usa overflow:hidden
+   para clipar o conteúdo. Aqui garantimos que o overlay respeite o raio
+   do pai via border-radius: inherit e que o container tenha overflow:hidden.
+   ========================================================= */
+.cta-window .cta-window-img-overlay {
+  /* Herda o border-radius do .cta-window .container (que tem overflow:hidden) */
+  border-radius: inherit;
+  /* Garante que o overlay cubra 100% mesmo com padding do pai */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* O container da CTA deve sempre clipar o conteúdo com seu border-radius */
+.cta-window .container {
+  overflow: hidden !important;
+}
+
+/* =========================================================
+   FILTER PILLS — AJUSTES COMPLEMENTARES PARA ANDROID / iOS
+   Garante feedback tátil correto nos chips e remove o highlight
+   azul padrão do Android ao tocar nos botões.
+   ========================================================= */
+.bemie-filter-chip {
+  -webkit-tap-highlight-color: transparent;
+  /* Evita seleção de texto acidental ao arrastar horizontalmente */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 

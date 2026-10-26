@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { BEMIE_PRODUCTS, STORE_CONFIG } from '../data/siteData';
 import {
   calculateProductOffer,
@@ -139,7 +140,7 @@ export function CartDrawer({
     setErrorMsg('');
   };
 
-  return (
+  const drawerContent = (
     <div className="bemie-drawer-backdrop" onClick={onClose}>
       <aside
         className="bemie-drawer numana-cart-drawer"
@@ -459,4 +460,8 @@ export function CartDrawer({
       </aside>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(drawerContent, document.body)
+    : drawerContent;
 }
