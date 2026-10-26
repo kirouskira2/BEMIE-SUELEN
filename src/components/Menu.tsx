@@ -36,13 +36,21 @@ export function MenuToggle({
         className={`menu-toggle eagle-icons-pill ${isOpen ? 'opened' : 'closed'} ${
           isVisible || isOpen ? 'is-visible' : 'is-hidden'
         }`}
+        onClick={(e) => {
+          if (isOpen && (e.target as HTMLElement).id === 'icons') {
+            toggleMenu();
+          }
+        }}
       >
         <button
           type="button"
           className="eagle-icon-trigger"
-          aria-label="Menu"
+          aria-label={isOpen ? 'Fechar menu' : 'Menu'}
           aria-expanded={isOpen}
-          onClick={toggleMenu}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleMenu();
+          }}
         >
           <i className={isOpen ? 'ri-close-line' : 'ri-menu-fill'} />
         </button>
@@ -50,7 +58,10 @@ export function MenuToggle({
           type="button"
           className="eagle-icon-trigger eagle-cart-trigger"
           aria-label={`Abrir carrinho com ${cartCount} itens`}
-          onClick={onOpenCart}
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenCart();
+          }}
         >
           <i className="ri-shopping-cart-2-line" />
           {cartCount > 0 && <span className="eagle-cart-count">{cartCount}</span>}
@@ -181,22 +192,23 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
   const animateMenu = useCallback((open: boolean) => {
     if (!menuRef.current) return;
     const menuEl = menuRef.current;
+    gsap.killTweensOf(menuEl);
     setIsAnimating(true);
 
     if (open) {
       document.body.classList.add('menu-open');
+      menuEl.style.pointerEvents = 'all';
       gsap.to(menuEl, {
         clipPath: 'circle(100% at 50% 50%)',
         ease: 'power3.out',
-        duration: 2,
+        duration: 0.8,
         onStart: () => {
-          menuEl.style.pointerEvents = 'all';
           splitTextsRef.current.forEach((split, index) => {
             gsap.to(split.lines, {
               y: '0%',
-              stagger: 0.05,
-              delay: 0.35 + index * 0.1,
-              duration: 1,
+              stagger: 0.04,
+              delay: 0.15 + index * 0.05,
+              duration: 0.6,
               ease: 'power4.out',
             });
           });
@@ -210,9 +222,8 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
         onStart: () => {
           gsap.to(menuEl, {
             clipPath: 'circle(0% at 50% 50%)',
-            ease: 'power3.out',
-            duration: 1,
-            delay: 0.75,
+            ease: 'power3.inOut',
+            duration: 0.5,
             onComplete: () => {
               menuEl.style.pointerEvents = 'none';
               splitTextsRef.current.forEach((split) => {
@@ -231,9 +242,9 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
           split.lines,
           {
             y: '-120%',
-            stagger: 0.03,
-            delay: index * 0.05,
-            duration: 1,
+            stagger: 0.02,
+            delay: index * 0.03,
+            duration: 0.4,
             ease: 'power3.out',
           },
           0
@@ -248,11 +259,21 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
     }
   }, [isOpen, animateMenu]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   const toggleMenu = useCallback(() => {
-    if (!isAnimating && isInitializedRef.current && !isNavigating) {
+    if (isInitializedRef.current && !isNavigating) {
       setIsOpen((prev) => !prev);
     }
-  }, [isAnimating, isNavigating]);
+  }, [isNavigating]);
 
   return (
     <div>
@@ -265,6 +286,14 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
       />
       <div className="menu" ref={menuRef}>
         <div className="menu-wrapper">
+          <button
+            type="button"
+            className="bemie-menu-fullscreen-close"
+            aria-label="Fechar menu"
+            onClick={() => setIsOpen(false)}
+          >
+            <i className="ri-close-line" />
+          </button>
           <div className="col col-1">
             <div className="links">
               <div className="link">

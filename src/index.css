@@ -4997,5 +4997,70 @@ html, body {
   -webkit-user-select: none;
 }
 
+/* =========================================================
+   MENU FULLSCREEN — FECHAMENTO VIA X & ÁREA DE TOQUE MOBILE
+   Garante que quando body.menu-open estiver ativo:
+   1. Todos os botões do pill (#icons) e ícone (X) tenham pointer-events: auto !important
+   2. O alvo de toque (touch target) do botão X tenha no mínimo 44px (Apple HIG & WCAG)
+   3. O botão X no topo da tela do menu fique disponível como forma adicional de saída
+   ========================================================= */
+body.menu-open .eagle-icons-hover-zone,
+body.menu-open #icons.menu-toggle,
+body.menu-open #icons.menu-toggle *,
+body.menu-open .eagle-icon-trigger,
+body.menu-open .eagle-icon-trigger *,
+body.menu-open .bemie-menu-fullscreen-close,
+body.menu-open .bemie-menu-fullscreen-close * {
+  pointer-events: auto !important;
+}
+
+#icons.menu-toggle.eagle-icons-pill {
+  touch-action: manipulation !important;
+}
+
+#icons.menu-toggle.eagle-icons-pill .eagle-icon-trigger {
+  min-width: 44px !important;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  cursor: pointer !important;
+}
+
+.bemie-menu-fullscreen-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(243, 233, 220, 0.22);
+  background: rgba(20, 19, 18, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #f3e9dc;
+  font-size: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bemie-menu-fullscreen-close:hover {
+  background: rgba(243, 233, 220, 0.2);
+  transform: scale(1.08);
+}
+
+.bemie-menu-fullscreen-close:active {
+  transform: scale(0.94);
+}
+
+
 
 
