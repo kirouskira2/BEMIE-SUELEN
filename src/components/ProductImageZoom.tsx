@@ -140,7 +140,7 @@ export const ProductImageZoom = React.memo(function ProductImageZoom({
           <line x1="11" y1="8" x2="11" y2="14" />
           <line x1="8" y1="11" x2="14" y2="11" />
         </svg>
-        <span>Zoom suave</span>
+        <span>Zoom</span>
       </div>
     </div>
   );

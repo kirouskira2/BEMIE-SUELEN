@@ -1503,21 +1503,24 @@ body {
   z-index: 3;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
               transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
   transform: scale(1.03);
+  background-color: transparent;
 }
 
 #page2 .elem .elem-reel-video.is-visible {
-  opacity: 1;
+  opacity: 1 !important;
+  visibility: visible !important;
   transform: scale(1);
-  z-index: 4;
+  z-index: 5;
 }
 
 #page2 .elem .elem-reel-video.is-hidden-reel {
-  opacity: 0 !important;
+  opacity: 0;
   pointer-events: none;
   z-index: 2;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 #page2 .elem .elem-reel-top-bar {
@@ -3412,69 +3415,71 @@ body {
 }
 
 #page2 .elem .dets {
-  top: 44% !important;
+  top: 54% !important;
   bottom: auto !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  width: min(210px, calc(100% - 32px)) !important;
+  width: min(168px, calc(100% - 32px)) !important;
   z-index: 10 !important;
-  transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1), top 0.32s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1), top 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 #page2 .elem .dets:hover {
-  top: 30% !important;
-  width: min(356px, calc(100% - 16px)) !important;
+  top: 42% !important;
+  width: min(224px, calc(100% - 24px)) !important;
 }
 
 #page2 .dets .dets-info {
   width: 100% !important;
-  height: 34px !important;
-  padding: 0 13px !important;
-  font-size: 11px !important;
+  height: 30px !important;
+  padding: 0 11px !important;
+  font-size: 10px !important;
   font-family: 'Work Sans', sans-serif !important;
   background-color: #efe3d3 !important;
   border: 1px solid rgba(0, 0, 0, 0.16) !important;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14) !important;
+  border-radius: 9999px !important;
 }
 
 #page2 .dets .dets-info p {
-  font-size: 10.5px !important;
-  letter-spacing: 0.08em !important;
+  font-size: 9.5px !important;
+  letter-spacing: 0.07em !important;
 }
 
 #page2 .dets .dets-info i {
-  font-size: 12px !important;
+  font-size: 11px !important;
 }
 
 #page2 .dets .dets-info .ri-circle-fill {
-  font-size: 6px !important;
+  font-size: 5px !important;
 }
 
 #page2 .dets .dets-container {
   width: 100% !important;
-  height: 34px !important;
-  padding-top: 34px !important;
+  height: 30px !important;
+  padding-top: 30px !important;
   background-color: #efe3d3 !important;
   border: 1px solid rgba(0, 0, 0, 0.16) !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22) !important;
   opacity: 0;
   pointer-events: none;
-  transition: height 0.34s cubic-bezier(0.22, 0.57, 0.12, 0.96), opacity 0.22s ease !important;
+  border-radius: 16px !important;
+  transition: height 0.32s cubic-bezier(0.22, 0.57, 0.12, 0.96), opacity 0.2s ease !important;
 }
 
 #page2 .dets:hover .dets-container {
-  height: 308px !important;
+  height: 180px !important;
   opacity: 1;
   pointer-events: auto;
 }
 
 #page2 .dets-container .listing {
   width: 100% !important;
-  height: 274px !important;
+  height: 150px !important;
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 10px !important;
-  padding: 10px 10px 12px !important;
+  gap: 8px !important;
+  padding: 6px 8px 8px !important;
   align-items: start !important;
   justify-content: center !important;
   box-sizing: border-box !important;
@@ -3487,8 +3492,8 @@ body {
   flex-direction: column !important;
   justify-content: flex-start !important;
   align-items: center !important;
-  gap: 6px !important;
-  padding: 3px !important;
+  gap: 4px !important;
+  padding: 2px !important;
   box-sizing: border-box !important;
   background: transparent !important;
 }
@@ -3501,9 +3506,10 @@ body {
 #page2 .list-elem .img-cont {
   width: 100% !important;
   aspect-ratio: 3 / 4 !important;
-  height: 210px !important;
-  max-height: 210px !important;
+  height: 100px !important;
+  max-height: 100px !important;
   overflow: hidden !important;
+  border-radius: 8px !important;
   background-color: #e4d6c4 !important;
   border: 1px solid rgba(20, 19, 19, 0.12) !important;
   flex-shrink: 0 !important;
@@ -3520,12 +3526,12 @@ body {
 
 #page2 .list-elem p {
   font-family: 'Work Sans', sans-serif !important;
-  font-size: 10px !important;
+  font-size: 8px !important;
   font-weight: 600 !important;
-  line-height: 1.22 !important;
+  line-height: 1.15 !important;
   text-align: center !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.03em !important;
+  letter-spacing: 0.02em !important;
   color: #141313 !important;
   margin: 0 !important;
   width: 100% !important;
