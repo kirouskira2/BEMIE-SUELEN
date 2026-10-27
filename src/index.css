@@ -5206,21 +5206,16 @@ body.menu-open .menu {
   contain-intrinsic-size: 0 800px;
 }
 
-/* Imagens do catálogo: renderização de alta qualidade + aceleração via GPU */
+/* Aceleração via GPU para fotos do catálogo — sem image-rendering manual
+   (o padrão 'auto' do browser usa interpolação bilinear/bicubic de alta qualidade no zoom) */
 .bemie-zoom-img,
 .numana-instafeed-img,
 .site-hero-img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
   will-change: transform;
   transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-}
-
-/* Imagem hero não precisa de image-rendering diferenciado pois é foto */
-.site-hero-img {
-  image-rendering: auto !important;
 }
 
 /* Evitar reflow em cards do catálogo ao trocar foto */
