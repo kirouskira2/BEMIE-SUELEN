@@ -1465,12 +1465,13 @@ body {
 #page2 {
   min-height: 100vh;
   width: 100%;
-  max-width: none;
+  max-width: 100%;
+  box-sizing: border-box !important;
   margin: 0 auto;
   position: relative;
   display: flex;
   align-items: center;
-  padding: 2.2vw max(2.5vw, calc((100vw - 1480px) / 2 + 2.5vw)) 3.8vw;
+  padding: 2.2vw max(2.5vw, calc((100% - 1480px) / 2 + 2.5vw)) 3.8vw;
   justify-content: space-between;
   gap: 1.6vw;
   z-index: 5;
@@ -2693,11 +2694,26 @@ body {
    - Grade horizontal de 6 fotos do Instagram (@bemiemodapraia)
    ========================================================= */
 
-html,
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
   background-color: #ffffff !important;
   color: #000000 !important;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  position: relative;
 }
 
 /* Ocultar molduras curvas periféricas para garantir estética 100% reta */
@@ -2898,6 +2914,13 @@ body.menu-open #icons.menu-toggle.eagle-icons-pill {
   pointer-events: auto !important;
   opacity: 1 !important;
   transform: translateX(-50%) !important;
+}
+
+.menu {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
 /* Barra superior de promoções: preto conforme solicitado pelo usuário */
@@ -4316,6 +4339,10 @@ body.menu-open #icons.menu-toggle.eagle-icons-pill {
 
 /* 7. RODAPÉ ARQUITETÔNICO MINIMALISTA (ESTILO NUMANA) */
 .footer.numana-footer {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
   background-color: #ffffff !important;
   color: #000000 !important;
   border-top: 1px solid #e5e5e5 !important;
@@ -4449,8 +4476,9 @@ body.menu-open #icons.menu-toggle.eagle-icons-pill {
   background-color: #efe3d3 !important;
   background: #efe3d3 !important;
   border-top: 1px solid #d9c2a6 !important;
-  margin: 0 -2.5vw -2rem !important;
-  padding: 1.5rem 2.5vw !important;
+  margin: 1.5rem -14px -2rem !important;
+  padding: 1.5rem 14px !important;
+  box-sizing: border-box !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
