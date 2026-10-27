@@ -5003,6 +5003,14 @@ body.menu-open .menu {
   animation-play-state: paused !important;
 }
 
+/* Garantir que o carrossel SEMPRE rode, independente de configurações de sistema */
+@media (prefers-reduced-motion: reduce) {
+  .bemie-trust-animate {
+    animation: scroll-left 78s linear infinite !important;
+    animation-play-state: running !important;
+  }
+}
+
 .bemie-trust-item {
   display: inline-flex !important;
   flex-direction: row !important;
@@ -5227,13 +5235,11 @@ body.menu-open .menu {
   }
 }
 
-/* Respeitar preferência do usuário por menos animação */
+/* Respeitar preferência do usuário por menos animação (exceto o carrossel que é UI essencial) */
 @media (prefers-reduced-motion: reduce) {
-  .animate-scroll,
-  .bemie-trust-animate,
-  .bemie-hero-vertical-line,
   .fade-in,
-  .placeholder-fade {
+  .placeholder-fade,
+  .bemie-hero-vertical-line {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;
