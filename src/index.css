@@ -1427,7 +1427,15 @@ body {
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-#icons.menu-toggle.eagle-icons-pill i:hover {
+#icons.menu-toggle.eagle-icons-pill svg {
+  display: block;
+  color: #141313;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#icons.menu-toggle.eagle-icons-pill i:hover,
+#icons.menu-toggle.eagle-icons-pill .eagle-icon-trigger:hover svg {
   opacity: 0.65;
   transform: scale(1.08);
 }
@@ -2976,6 +2984,12 @@ body {
   #icons.menu-toggle.eagle-icons-pill i {
     font-size: 21px !important;
     line-height: 1 !important;
+    color: #141313 !important;
+  }
+
+  #icons.menu-toggle.eagle-icons-pill svg {
+    width: 20px !important;
+    height: 22px !important;
     color: #141313 !important;
   }
 }
@@ -4713,11 +4727,13 @@ body.menu-open .menu {
 
 @media (max-width: 768px) {
   .site-hero-media.numana-hero-media {
-    height: clamp(280px, 46svh, 380px) !important;
-    min-height: 260px !important;
+    height: clamp(230px, 32svh, 280px) !important;
+    min-height: 230px !important;
+    max-height: 280px !important;
   }
-  .site-hero-media.numana-hero-media img {
-    object-position: center center !important;
+  .site-hero-media.numana-hero-media img,
+  .hero.site-hero.numana-hero .site-hero-img {
+    object-position: 74% center !important;
   }
   .bemie-catalog-toolbar {
     flex-direction: column !important;

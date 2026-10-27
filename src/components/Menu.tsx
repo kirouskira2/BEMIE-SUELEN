@@ -49,7 +49,19 @@ export function MenuToggle({ isOpen, toggleMenu, cartCount, onOpenCart }: MenuTo
             onOpenCart();
           }}
         >
-          <i className="ri-shopping-cart-2-line" />
+          <svg
+            width="19"
+            height="21"
+            viewBox="0 0 20 22"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            aria-hidden="true"
+            className="eagle-cart-bag-icon"
+          >
+            <path d="M3 6H17L18 20H2L3 6Z" />
+            <path d="M6.5 6V4.5C6.5 2.567 8.067 1 10 1C11.933 1 13.5 2.567 13.5 4.5V6" />
+          </svg>
           {cartCount > 0 && <span className="eagle-cart-count">{cartCount}</span>}
         </button>
       </div>
