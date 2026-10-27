@@ -439,15 +439,8 @@ body {
 .hero.site-hero {
   position: relative;
   width: 100%;
-  height: clamp(250px, 40svh, 370px) !important;
-  min-height: 250px !important;
-  max-height: 370px !important;
   background-color: var(--frame);
-  overflow: hidden;
   padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .site-hero-media {
@@ -465,11 +458,6 @@ body {
 }
 
 @media (max-width: 850px) {
-  .hero.site-hero {
-    height: clamp(210px, 34svh, 290px) !important;
-    min-height: 210px !important;
-    max-height: 290px !important;
-  }
   .site-hero-media {
     top: 8px;
     bottom: 4px;
@@ -2803,6 +2791,8 @@ body {
 .hero.site-hero,
 .site-hero-media,
 .numana-hero-btn,
+.numana-hero-copy,
+.numana-hero-frame,
 #page2 .elem,
 #page2 .elem > img,
 #page2 .elem .elem-reel-pill,
@@ -3411,6 +3401,8 @@ body.menu-open .menu {
   max-height: none !important;
   background-color: #f3e9dc !important;
   padding: 0 !important;
+  /* position:relative para que a caption (absolute) se posicione relativa à section */
+  position: relative !important;
   display: block !important;
   border-bottom: 1px solid #d9c2a6 !important;
 }
@@ -3458,86 +3450,130 @@ body.menu-open .menu {
   border: 1px solid rgba(255, 250, 242, 0.55);
 }
 
+/* -------------------------------------------------------
+   CAPTION: absolute relativa à SECTION (não ao media)
+   Desktop → sobreposta sobre a imagem, no rodapé
+   Mobile  → flui abaixo da imagem (ver @media abaixo)
+------------------------------------------------------- */
 .numana-hero-caption {
   position: absolute;
-  left: 28px;
-  right: 28px;
-  bottom: 1.25rem;
-  z-index: 4;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 1.5rem;
+  z-index: 10;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.25rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  pointer-events: auto;
 }
 
 .numana-hero-copy {
   display: flex;
   flex-direction: column;
-  gap: 0.34rem;
-  background: linear-gradient(135deg, rgba(250, 244, 236, 0.90) 0%, rgba(239, 227, 211, 0.78) 100%);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid rgba(217, 194, 166, 0.92);
-  border-left: 3px solid #7b5238;
-  padding: 0.78rem 1.38rem;
-  box-shadow: 0 14px 34px rgba(28, 21, 16, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4px;
+  background: rgba(255, 252, 248, 0.88);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(180, 155, 128, 0.65);
+  border-radius: 0px;
+  padding: 10px 28px;
+  box-shadow: 0 8px 24px rgba(45, 26, 15, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.numana-hero-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: 'DM Mono', 'Work Sans', monospace;
-  font-size: 10px;
+.numana-hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
   font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #7b5a3a;
+  line-height: 1.1;
+}
+
+.numana-hero-brand-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.numana-hero-brand-tag {
+  font-family: 'Manrope Variable', 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #6e4830;
-  text-shadow: none;
+  color: #1c1510;
+  line-height: 1;
 }
 
-.numana-hero-kicker-line {
-  width: 26px;
-  height: 1.5px;
-  background: linear-gradient(90deg, #7b5238 0%, rgba(123, 82, 56, 0.25) 100%);
+.numana-hero-brand-sep {
+  width: 1px;
+  height: 10px;
+  background: rgba(60, 37, 22, 0.35);
   display: inline-block;
   flex-shrink: 0;
 }
 
+.numana-hero-city {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #7b5238;
+  line-height: 1;
+}
+
 .numana-hero-sub {
   font-family: 'Work Sans', sans-serif !important;
-  font-size: 12.5px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.11em !important;
-  line-height: 1.35 !important;
+  font-size: 8.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.12em !important;
+  line-height: 1.25 !important;
   text-transform: uppercase !important;
-  color: #1c1510 !important;
+  color: #5a3e2b !important;
   margin: 0 !important;
   text-shadow: none;
+  opacity: 0.85;
 }
 
 .numana-hero-btn {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   background: #1c1510;
   color: #f3e9dc;
   border: 1px solid #1c1510;
-  padding: 0.72rem 1.35rem;
+  border-radius: 0px;
+  padding: 0.85rem 2rem;
   font-family: 'Work Sans', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+  box-shadow: 0 4px 18px rgba(28, 21, 16, 0.28);
+  transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease, transform 0.15s ease;
+}
+
+.numana-hero-btn i {
+  font-size: 15px;
 }
 
 .numana-hero-btn:hover {
   background: #efe3d3;
   color: #1c1510;
   border-color: #1c1510;
+  transform: translateY(-1px);
 }
 
 /* Linha vertical arquitetônica inspirada em blank-canvas ao final da contagem/hero */
@@ -4727,9 +4763,9 @@ body.menu-open .menu {
 
 @media (max-width: 768px) {
   .site-hero-media.numana-hero-media {
-    height: clamp(230px, 32svh, 280px) !important;
-    min-height: 230px !important;
-    max-height: 280px !important;
+    height: clamp(260px, 38svh, 340px) !important;
+    min-height: 260px !important;
+    max-height: 340px !important;
   }
   .site-hero-media.numana-hero-media img,
   .hero.site-hero.numana-hero .site-hero-img {
@@ -4832,37 +4868,70 @@ body.menu-open .menu {
   .numana-hero-frame {
     inset: 8px !important;
   }
+
+  /* --- MOBILE: caption sai do flow da imagem e fica abaixo --- */
   .numana-hero-caption {
-    left: 16px !important;
-    right: 16px !important;
-    bottom: 0.85rem !important;
+    position: static !important;
+    transform: none !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
     flex-direction: row !important;
-    align-items: flex-end !important;
+    align-items: center !important;
     justify-content: space-between !important;
-    gap: 0.5rem !important;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 10px 14px !important;
+    background-color: #f3e9dc !important;
+    border-top: 1px solid #d9c2a6 !important;
+    box-sizing: border-box !important;
+    z-index: auto !important;
   }
   .numana-hero-copy {
-    padding: 0.42rem 0.7rem !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    gap: 2px !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    flex: 1 !important;
+    min-width: 0 !important;
   }
-  .numana-hero-kicker {
-    font-size: 8px !important;
-    letter-spacing: 0.08em !important;
-    gap: 0.3rem !important;
+  .numana-hero-eyebrow {
+    font-size: 7px !important;
+    letter-spacing: 0.16em !important;
   }
-  .numana-hero-kicker-line {
-    width: 12px !important;
+  .numana-hero-brand-group {
+    gap: 5px !important;
+  }
+  .numana-hero-brand-tag {
+    font-size: 11px !important;
+    letter-spacing: 0.12em !important;
+  }
+  .numana-hero-brand-sep {
+    height: 9px !important;
+  }
+  .numana-hero-city {
+    font-size: 7px !important;
+    letter-spacing: 0.2em !important;
   }
   .numana-hero-sub {
     display: block !important;
-    font-size: 9px !important;
-    letter-spacing: 0.04em !important;
+    font-size: 7.5px !important;
+    letter-spacing: 0.08em !important;
+    line-height: 1.2 !important;
+    opacity: 0.75 !important;
   }
   .numana-hero-btn {
-    padding: 0.45rem 0.72rem !important;
-    font-size: 9px !important;
+    padding: 7px 14px !important;
+    font-size: 8.5px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
+    align-self: center !important;
   }
   #page3.bemie-eagle-page3.numana-catalog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -5117,4 +5186,56 @@ body.menu-open .menu {
   display: none !important;
 }
 
+/* =========================================================
+   OTIMIZAÇÕES DE PERFORMANCE (CARREGAMENTO DE IMAGENS E SEÇÕES)
+   ========================================================= */
 
+/* Content-visibility para seções abaixo do fold — economiza rendering até a seção aparecer */
+.bemie-catalog-section,
+.footer.numana-footer,
+.numana-instafeed-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 800px;
+}
+
+/* Imagens do catálogo: renderização de alta qualidade + aceleração via GPU */
+.bemie-zoom-img,
+.numana-instafeed-img,
+.site-hero-img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Imagem hero não precisa de image-rendering diferenciado pois é foto */
+.site-hero-img {
+  image-rendering: auto !important;
+}
+
+/* Evitar reflow em cards do catálogo ao trocar foto */
+#page3 .child {
+  contain: layout style;
+}
+
+/* Smooth scroll nativo como fallback (Lenis cuida via JS) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Respeitar preferência do usuário por menos animação */
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll,
+  .bemie-trust-animate,
+  .bemie-hero-vertical-line,
+  .fade-in,
+  .placeholder-fade {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+  }
+}

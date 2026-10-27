@@ -6,9 +6,10 @@ interface SiteHeroProps {
 
 /**
  * Hero Section Editorial Bemiê:
- * - Imagem panorâmica /assets/aistudio/c2d542cb-f2b1-4d6b-9294-8226318f1c76_9a9392ff.jpg
- * - Linha vertical arquitetônica minimalista inspirada em blank-canvas ao final da contagem/seção
- * - Moldura editorial e legenda com COMPRE PELO CATÁLOGO E FINALIZE PELO WHATSAPP
+ * - Imagem panorâmica /assets/capa.jfif
+ * - Caption FORA do media container: sobreposta no desktop via position absolute,
+ *   abaixo da imagem no mobile via normal flow (não cobre o logo da foto)
+ * - Linha vertical arquitetônica minimalista ao final da seção
  */
 export const SiteHero = React.memo(function SiteHero({ onExploreCatalog }: SiteHeroProps) {
   return (
@@ -17,41 +18,41 @@ export const SiteHero = React.memo(function SiteHero({ onExploreCatalog }: SiteH
         <img
           src="/assets/capa.jfif"
           alt="Bemiê Moda Praia — Compre pelo catálogo e finalize pelo WhatsApp"
-          className="hero-img site-hero-img lazyload fade-in lazyloaded"
+          className="hero-img site-hero-img fade-in lazyloaded"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          width="1920"
+          height="780"
         />
-        <div className="placeholder-fade" aria-hidden="true" />
+      </div>
 
-        {/* Moldura editorial e legenda */}
-        <div className="numana-hero-frame" aria-hidden="true" />
-
-        <div className="numana-hero-caption">
-          <div className="numana-hero-copy">
-            <span className="numana-hero-kicker">
-              <span className="numana-hero-kicker-line" aria-hidden="true" />
-              COLEÇÃO VERÃO 26/27 · MODA PRAIA AUTORAL
-            </span>
-            <p className="numana-hero-sub">
-              COMPRE PELO CATÁLOGO E FINALIZE PELO WHATSAPP
-            </p>
+      {/* Caption FORA do media:
+          - Desktop → position absolute sobre a imagem (via CSS)
+          - Mobile  → flui normalmente abaixo da imagem (não cobre o logo) */}
+      <div className="numana-hero-caption">
+        <div className="numana-hero-copy">
+          <span className="numana-hero-eyebrow">COLEÇÃO VERÃO 26/27</span>
+          <div className="numana-hero-brand-group">
+            <span className="numana-hero-brand-tag">MODA PRAIA</span>
+            <span className="numana-hero-brand-sep" aria-hidden="true" />
+            <span className="numana-hero-city">RECIFE</span>
           </div>
-          {onExploreCatalog && (
-            <button
-              type="button"
-              className="numana-hero-btn"
-              onClick={onExploreCatalog}
-            >
-              <span>EXPLORAR CATÁLOGO</span>
-              <i className="ri-arrow-right-up-line" aria-hidden="true" />
-            </button>
-          )}
+          <p className="numana-hero-sub">
+            COMPRE PELO CATÁLOGO E FINALIZE PELO WHATSAPP
+          </p>
         </div>
-
-        {/* Linha vertical minimalista inspirada em blank-canvas ao final da contagem */}
-        <div className="bemie-hero-vertical-divider" aria-hidden="true">
-          <span className="bemie-hero-vertical-line" />
-        </div>
+        {onExploreCatalog && (
+          <button
+            type="button"
+            className="numana-hero-btn"
+            onClick={onExploreCatalog}
+          >
+            <span>EXPLORAR CATÁLOGO</span>
+            <i className="ri-arrow-right-up-line" aria-hidden="true" />
+          </button>
+        )}
       </div>
     </section>
   );
 });
-

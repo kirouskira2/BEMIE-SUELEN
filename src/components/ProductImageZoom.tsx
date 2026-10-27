@@ -120,6 +120,7 @@ export const ProductImageZoom = React.memo(function ProductImageZoom({
         className={`bemie-zoom-img ${numanaImgClasses} ${className}`}
         referrerPolicy={referrerPolicy}
         loading={loading}
+        decoding="async"
         onLoad={() => setIsLoaded(true)}
         onError={() => setIsLoaded(true)}
       />
