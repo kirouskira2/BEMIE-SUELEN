@@ -1,17 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Fundo branco com bordas arredondadas estilo app icon -->
-  <rect width="512" height="512" rx="112" ry="112" fill="#ffffff"/>
-  <!-- Sombra sutil interna para profundidade -->
-  <rect width="512" height="512" rx="112" ry="112" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="2"/>
-  <!-- Texto BEMIÊ centralizado na cor caramel da marca -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220">
+  <!-- Fundo branco retangular com bordas arredondadas -->
+  <rect width="640" height="220" rx="44" ry="44" fill="#ffffff"/>
+  <!-- Borda sutil para definição -->
+  <rect width="640" height="220" rx="44" ry="44" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="3"/>
+  <!-- Texto BEMIÊ grande e legível, centralizado -->
   <text
-    x="256"
-    y="308"
-    font-family="Georgia, 'Cormorant Garamond', 'Times New Roman', serif"
-    font-size="200"
+    x="320"
+    y="158"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="148"
     font-weight="700"
     fill="#7b5238"
     text-anchor="middle"
-    letter-spacing="4"
+    letter-spacing="6"
   >BEMIÊ</text>
 </svg>
