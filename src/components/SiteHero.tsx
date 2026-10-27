@@ -21,9 +21,7 @@ export const SiteHero = React.memo(function SiteHero({ onExploreCatalog }: SiteH
         />
         <div className="placeholder-fade" aria-hidden="true" />
 
-        {/* Efeito solar de verão leve e iluminado sobre a imagem */}
-        <div className="site-hero-color-filter" aria-hidden="true" />
-        <div className="site-hero-overlay numana-hero-overlay" aria-hidden="true" />
+        {/* Moldura editorial e legenda */}
         <div className="numana-hero-frame" aria-hidden="true" />
 
         <div className="numana-hero-caption">
