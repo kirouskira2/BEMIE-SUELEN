@@ -4,7 +4,6 @@ import { SplitText } from 'gsap/SplitText';
 import { CustomEase } from 'gsap/CustomEase';
 import { useLenis } from 'lenis/react';
 import { STORE_CONFIG } from '../data/siteData';
-import { computeHeaderVisibility } from '../utils/animationMath';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(SplitText, CustomEase);
@@ -15,39 +14,22 @@ interface MenuToggleProps {
   toggleMenu: () => void;
   cartCount: number;
   onOpenCart: () => void;
-  isVisible?: boolean;
 }
 
-export function MenuToggle({
-  isOpen,
-  toggleMenu,
-  cartCount,
-  onOpenCart,
-  isVisible = true,
-}: MenuToggleProps) {
+export function MenuToggle({ isOpen, toggleMenu, cartCount, onOpenCart }: MenuToggleProps) {
   return (
-    <div
-      className={`eagle-icons-hover-zone ${
-        isVisible || isOpen ? 'is-visible' : 'is-hidden'
-      }`}
-    >
+    <div className={`eagle-icons-hover-zone is-sidebar-visible${isOpen ? ' is-menu-open' : ''}`}>
       <div
         id="icons"
-        className={`menu-toggle eagle-icons-pill ${isOpen ? 'opened' : 'closed'} ${
-          isVisible || isOpen ? 'is-visible' : 'is-hidden'
-        }`}
-        onClick={(e) => {
-          if (isOpen && (e.target as HTMLElement).id === 'icons') {
-            toggleMenu();
-          }
-        }}
+        className={`menu-toggle eagle-icons-pill ${isOpen ? 'opened' : 'closed'}`}
       >
         <button
           type="button"
           className="eagle-icon-trigger"
-          aria-label={isOpen ? 'Fechar menu' : 'Menu'}
+          aria-label={isOpen ? 'Fechar Menu' : 'Abrir Menu'}
           aria-expanded={isOpen}
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             toggleMenu();
           }}
@@ -59,7 +41,11 @@ export function MenuToggle({
           className="eagle-icon-trigger eagle-cart-trigger"
           aria-label={`Abrir carrinho com ${cartCount} itens`}
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
+            if (isOpen) {
+              toggleMenu();
+            }
             onOpenCart();
           }}
         >
@@ -81,52 +67,10 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  const [isNavVisible, setIsNavVisible] = useState(true);
-  const lastScrollYRef = useRef(0);
-  const isNavVisibleRef = useRef(true);
   const menuRef = useRef<HTMLDivElement>(null);
   const isInitializedRef = useRef(false);
   const splitTextsRef = useRef<SplitText[]>([]);
   const lenis = useLenis();
-
-  useEffect(() => {
-    isNavVisibleRef.current = isNavVisible;
-  }, [isNavVisible]);
-
-  useLenis((lenis) => {
-    const result = computeHeaderVisibility(
-      lenis.scroll,
-      lastScrollYRef.current,
-      isNavVisibleRef.current
-    );
-    if (result.isVisible !== isNavVisibleRef.current) {
-      setIsNavVisible(result.isVisible);
-    }
-    lastScrollYRef.current = result.nextLastScrollY;
-  });
-
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const currentY = window.scrollY || document.documentElement.scrollTop || 0;
-        const result = computeHeaderVisibility(
-          currentY,
-          lastScrollYRef.current,
-          isNavVisibleRef.current
-        );
-        if (result.isVisible !== isNavVisibleRef.current) {
-          setIsNavVisible(result.isVisible);
-        }
-        lastScrollYRef.current = result.nextLastScrollY;
-        ticking = false;
-      });
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     if (lenis) {
@@ -197,18 +141,18 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
 
     if (open) {
       document.body.classList.add('menu-open');
-      menuEl.style.pointerEvents = 'all';
       gsap.to(menuEl, {
         clipPath: 'circle(100% at 50% 50%)',
         ease: 'power3.out',
-        duration: 0.8,
+        duration: 1.1,
         onStart: () => {
+          menuEl.style.pointerEvents = 'all';
           splitTextsRef.current.forEach((split, index) => {
             gsap.to(split.lines, {
               y: '0%',
               stagger: 0.04,
-              delay: 0.15 + index * 0.05,
-              duration: 0.6,
+              delay: 0.15 + index * 0.06,
+              duration: 0.7,
               ease: 'power4.out',
             });
           });
@@ -224,6 +168,7 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
             clipPath: 'circle(0% at 50% 50%)',
             ease: 'power3.inOut',
             duration: 0.5,
+            delay: 0.05,
             onComplete: () => {
               menuEl.style.pointerEvents = 'none';
               splitTextsRef.current.forEach((split) => {
@@ -243,9 +188,8 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
           {
             y: '-120%',
             stagger: 0.02,
-            delay: index * 0.03,
             duration: 0.4,
-            ease: 'power3.out',
+            ease: 'power3.in',
           },
           0
         );
@@ -259,21 +203,9 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
     }
   }, [isOpen, animateMenu]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
-
   const toggleMenu = useCallback(() => {
-    if (isInitializedRef.current && !isNavigating) {
-      setIsOpen((prev) => !prev);
-    }
-  }, [isNavigating]);
+    setIsOpen((prev) => !prev);
+  }, []);
 
   return (
     <div>
@@ -282,18 +214,9 @@ export function Menu({ cartCount, onOpenCart, onNavigate }: MenuProps) {
         toggleMenu={toggleMenu}
         cartCount={cartCount}
         onOpenCart={onOpenCart}
-        isVisible={isNavVisible}
       />
       <div className="menu" ref={menuRef}>
         <div className="menu-wrapper">
-          <button
-            type="button"
-            className="bemie-menu-fullscreen-close"
-            aria-label="Fechar menu"
-            onClick={() => setIsOpen(false)}
-          >
-            <i className="ri-close-line" />
-          </button>
           <div className="col col-1">
             <div className="links">
               <div className="link">

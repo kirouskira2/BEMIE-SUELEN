@@ -6,6 +6,7 @@ import {
   CatalogFilterKey,
   getCategoryReelConfig,
   getNextCategoryReelIndex,
+  resolveBufferedCategoryReelIndex,
   shouldPlayCategoryReel,
 } from '../utils/animationMath';
 
@@ -58,7 +59,7 @@ export const EAGLE_TRIO_COLUMNS: EagleTrioColumn[] = [
     ],
     videoPosters: [
       '/bemie/products/p_bayopyq5_0.jpg',
-      '/bemie/products/p_dwsrre4l_0.jpg',
+      '/bemie/products/p_bayopyq5_0.jpg',
     ],
     pillBg: '#efe3d3',
     cursorColor: 'rgba(115, 148, 120, 0.24)',
@@ -101,7 +102,7 @@ export const EAGLE_TRIO_COLUMNS: EagleTrioColumn[] = [
     ],
     videoPosters: [
       '/bemie/products/p_icbso4d4_0.jpg',
-      '/bemie/products/p_qiw632k8_0.jpg',
+      '/bemie/products/p_icbso4d4_0.jpg',
     ],
     pillBg: '#efe3d3',
     cursorColor: 'rgba(155, 115, 82, 0.24)',
@@ -173,30 +174,27 @@ export function MouseBallCursor() {
 export const EaglePhotoTrio = React.memo(function EaglePhotoTrio({ onSelectCategory }: EagleShowcaseProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
+  const canPlayThroughRef = useRef<Record<string, boolean>>({});
+  const pauseTimersRef = useRef<Record<string, number>>({});
+  const [canPlayThroughMap, setCanPlayThroughMap] = useState<Record<string, boolean>>({});
   const [activeImages, setActiveImages] = useState<Record<string, string>>({});
   const [hoveredColId, setHoveredColId] = useState<string | null>(null);
   const [previewThumbColId, setPreviewThumbColId] = useState<string | null>(null);
   const [loadedImageKeys, setLoadedImageKeys] = useState<Record<string, boolean>>({});
-  const [canPlayThroughMap, setCanPlayThroughMap] = useState<Record<string, boolean>>({});
   const [activeReelIndices, setActiveReelIndices] = useState<Record<string, number>>({
     elem1: 0,
     elem2: 0,
     elem3: 0,
   });
 
-  const lastSwitchTimeRef = useRef<Record<string, number>>({
-    elem1: Date.now(),
-    elem2: Date.now(),
-    elem3: Date.now(),
-  });
-
-  const markVideoReady = useCallback((videoKey: string) => {
-    setCanPlayThroughMap((prev) => (prev[videoKey] ? prev : { ...prev, [videoKey]: true }));
+  const markImageLoaded = useCallback((key: string) => {
+    setLoadedImageKeys((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
   }, []);
 
-  const markImageLoaded = (key: string) => {
-    setLoadedImageKeys((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
-  };
+  const markVideoCanPlayThrough = useCallback((videoKey: string) => {
+    canPlayThroughRef.current[videoKey] = true;
+    setCanPlayThroughMap((prev) => (prev[videoKey] ? prev : { ...prev, [videoKey]: true }));
+  }, []);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -225,20 +223,78 @@ export const EaglePhotoTrio = React.memo(function EaglePhotoTrio({ onSelectCateg
     return () => ctx.revert();
   }, []);
 
-  // Synchronize active video playback per column with smooth crossfade
+  // Attach native 'canplaythrough' listeners and check readyState >= HAVE_ENOUGH_DATA (4) on all videos
   useEffect(() => {
-    const pauseTimers: number[] = [];
+    const cleanups: (() => void)[] = [];
 
     EAGLE_TRIO_COLUMNS.forEach((col) => {
-      const activeIdx = activeReelIndices[col.id] ?? 0;
       col.videoSources.forEach((_, idx) => {
-        const videoEl = videoRefs.current[`${col.id}_${idx}`];
+        const videoKey = `${col.id}_${idx}`;
+        const videoEl = videoRefs.current[videoKey];
         if (!videoEl) return;
+
+        const handleCanPlayThrough = () => {
+          markVideoCanPlayThrough(videoKey);
+        };
+
+        videoEl.addEventListener('canplaythrough', handleCanPlayThrough);
+        cleanups.push(() => videoEl.removeEventListener('canplaythrough', handleCanPlayThrough));
+
+        if (videoEl.readyState >= 4) {
+          markVideoCanPlayThrough(videoKey);
+        } else {
+          // Trigger buffer preloading for secondary videos so canplaythrough fires promptly
+          videoEl.load();
+        }
+      });
+    });
+
+    return () => {
+      cleanups.forEach((fn) => fn());
+    };
+  }, [markVideoCanPlayThrough]);
+
+  // Synchronize active video playback per column using canplaythrough verification and smooth crossfade
+  useEffect(() => {
+    EAGLE_TRIO_COLUMNS.forEach((col) => {
+      const targetIdx = activeReelIndices[col.id] ?? 0;
+      const targetKey = `${col.id}_${targetIdx}`;
+      const targetEl = videoRefs.current[targetKey];
+      const isTargetBuffered =
+        targetIdx === 0 ||
+        Boolean(canPlayThroughRef.current[targetKey]) ||
+        Boolean(canPlayThroughMap[targetKey]) ||
+        (targetEl?.readyState ?? 0) >= 4;
+
+      const activeIdx = resolveBufferedCategoryReelIndex({
+        currentIndex: 0,
+        targetIndex: targetIdx,
+        totalSources: col.videoSources.length,
+        isTargetBuffered,
+      });
+
+      col.videoSources.forEach((_, idx) => {
+        const videoKey = `${col.id}_${idx}`;
+        const videoEl = videoRefs.current[videoKey];
+        if (!videoEl) return;
+
+        if (pauseTimersRef.current[videoKey]) {
+          window.clearTimeout(pauseTimersRef.current[videoKey]);
+          delete pauseTimersRef.current[videoKey];
+        }
+
         videoEl.muted = true;
         videoEl.defaultMuted = true;
         videoEl.playsInline = true;
 
         if (idx === activeIdx) {
+          if (col.videoSources.length > 1 && videoEl.paused) {
+            try {
+              videoEl.currentTime = 0;
+            } catch {
+              // ignore seek before metadata
+            }
+          }
           const playPromise = videoEl.play();
           if (playPromise && typeof playPromise.catch === 'function') {
             playPromise.catch(() => {
@@ -247,24 +303,32 @@ export const EaglePhotoTrio = React.memo(function EaglePhotoTrio({ onSelectCateg
             });
           }
         } else if (!videoEl.paused) {
-          // Permite que o vídeo anterior continue renderizando frames durante o fade de 500ms para evitar corte abrupto ou tela branca
-          const t = window.setTimeout(() => {
-            if (videoEl) {
-              try {
-                videoEl.pause();
-              } catch {
-                // ignore
-              }
+          // Delay pause until after the 320ms opacity transition completes to prevent any blank frame
+          pauseTimersRef.current[videoKey] = window.setTimeout(() => {
+            try {
+              videoEl.pause();
+            } catch {
+              // ignore
             }
-          }, 600);
-          pauseTimers.push(t);
+          }, 360);
         }
       });
     });
 
     const ensureActiveVideosPlaying = () => {
       EAGLE_TRIO_COLUMNS.forEach((col) => {
-        const activeIdx = activeReelIndices[col.id] ?? 0;
+        const targetIdx = activeReelIndices[col.id] ?? 0;
+        const targetKey = `${col.id}_${targetIdx}`;
+        const isTargetBuffered =
+          targetIdx === 0 ||
+          Boolean(canPlayThroughRef.current[targetKey]) ||
+          (videoRefs.current[targetKey]?.readyState ?? 0) >= 4;
+        const activeIdx = resolveBufferedCategoryReelIndex({
+          currentIndex: 0,
+          targetIndex: targetIdx,
+          totalSources: col.videoSources.length,
+          isTargetBuffered,
+        });
         const videoEl = videoRefs.current[`${col.id}_${activeIdx}`];
         if (videoEl && videoEl.paused && previewThumbColId !== col.id) {
           videoEl.muted = true;
@@ -300,69 +364,65 @@ export const EaglePhotoTrio = React.memo(function EaglePhotoTrio({ onSelectCateg
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
-      pauseTimers.forEach((t) => window.clearTimeout(t));
       window.clearInterval(watchdog);
       io?.disconnect();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [activeReelIndices, previewThumbColId]);
+  }, [activeReelIndices, canPlayThroughMap, previewThumbColId]);
 
-  // Alternar vídeos a cada 7 segundos garantindo buffer completo (canplaythrough / readyState >= 4)
+  // Alternate between videos every 7 seconds only once the second video has fired 'canplaythrough'
   useEffect(() => {
     const timer = window.setInterval(() => {
       const loaderEl = document.querySelector('.loader');
       if (loaderEl && window.getComputedStyle(loaderEl).pointerEvents !== 'none') {
         return;
       }
-
-      const now = Date.now();
       setActiveReelIndices((prev) => {
-        let changed = false;
-        const next = { ...prev };
-
+        const next: Record<string, number> = { ...prev };
         EAGLE_TRIO_COLUMNS.forEach((col) => {
           if (col.videoSources.length > 1) {
-            const lastSwitch = lastSwitchTimeRef.current[col.id] ?? 0;
-            if (now - lastSwitch < CATEGORY_REEL_SWITCH_INTERVAL_MS) {
-              return;
-            }
-
             const currentIdx = prev[col.id] ?? 0;
-            const targetNextIdx = getNextCategoryReelIndex(currentIdx, col.videoSources.length);
-            const nextVideoKey = `${col.id}_${targetNextIdx}`;
-            const nextVideoEl = videoRefs.current[nextVideoKey];
+            const candidateIdx = getNextCategoryReelIndex(currentIdx, col.videoSources.length);
+            const candidateKey = `${col.id}_${candidateIdx}`;
+            const candidateVideoEl = videoRefs.current[candidateKey];
+            const isCandidateBuffered =
+              candidateIdx === 0 ||
+              Boolean(canPlayThroughRef.current[candidateKey]) ||
+              (candidateVideoEl?.readyState ?? 0) >= 4;
 
-            // Verificação de buffer completo: canplaythrough registrado ou readyState >= HAVE_ENOUGH_DATA (4)
-            const isBufferReady =
-              canPlayThroughMap[nextVideoKey] ||
-              (nextVideoEl && nextVideoEl.readyState >= 4);
-
-            if (isBufferReady) {
-              if (nextVideoEl) {
-                nextVideoEl.muted = true;
-                try {
-                  nextVideoEl.currentTime = 0;
-                } catch {
-                  // ignore
-                }
-                nextVideoEl.play().catch(() => {});
-              }
-              next[col.id] = targetNextIdx;
-              lastSwitchTimeRef.current[col.id] = now;
-              changed = true;
+            if (isCandidateBuffered && candidateIdx > 0) {
+              canPlayThroughRef.current[candidateKey] = true;
             }
+
+            next[col.id] = resolveBufferedCategoryReelIndex({
+              currentIndex: currentIdx,
+              targetIndex: candidateIdx,
+              totalSources: col.videoSources.length,
+              isTargetBuffered: isCandidateBuffered,
+            });
           }
         });
-
-        return changed ? next : prev;
+        return next;
       });
-    }, 500);
+    }, CATEGORY_REEL_SWITCH_INTERVAL_MS);
 
     return () => window.clearInterval(timer);
-  }, [canPlayThroughMap]);
+  }, []);
 
   const ensureReelPlaying = (colId: string) => {
-    const activeIdx = activeReelIndices[colId] ?? 0;
+    const targetIdx = activeReelIndices[colId] ?? 0;
+    const targetKey = `${colId}_${targetIdx}`;
+    const col = EAGLE_TRIO_COLUMNS.find((c) => c.id === colId);
+    const isTargetBuffered =
+      targetIdx === 0 ||
+      Boolean(canPlayThroughRef.current[targetKey]) ||
+      (videoRefs.current[targetKey]?.readyState ?? 0) >= 4;
+    const activeIdx = resolveBufferedCategoryReelIndex({
+      currentIndex: 0,
+      targetIndex: targetIdx,
+      totalSources: col?.videoSources.length ?? 1,
+      isTargetBuffered,
+    });
     const videoEl = videoRefs.current[`${colId}_${activeIdx}`];
     if (videoEl && videoEl.paused) {
       videoEl.muted = true;
@@ -383,7 +443,19 @@ export const EaglePhotoTrio = React.memo(function EaglePhotoTrio({ onSelectCateg
           isCardHovered: hoveredColId === col.id,
           isPreviewingProductThumb: previewThumbColId === col.id,
         });
-        const currentReelIdx = activeReelIndices[col.id] ?? 0;
+        const targetReelIdx = activeReelIndices[col.id] ?? 0;
+        const targetVideoKey = `${col.id}_${targetReelIdx}`;
+        const isTargetBuffered =
+          targetReelIdx === 0 ||
+          Boolean(canPlayThroughMap[targetVideoKey]) ||
+          Boolean(canPlayThroughRef.current[targetVideoKey]);
+
+        const currentReelIdx = resolveBufferedCategoryReelIndex({
+          currentIndex: 0,
+          targetIndex: targetReelIdx,
+          totalSources: col.videoSources.length,
+          isTargetBuffered,
+        });
         const currentReelUrl = col.reelUrls[currentReelIdx] || col.reelUrl;
 
         return (
@@ -427,15 +499,19 @@ export const EaglePhotoTrio = React.memo(function EaglePhotoTrio({ onSelectCateg
               style={{ opacity: 1 }}
             />
             {col.videoSources.map((src, idx) => {
+              const videoKey = `${col.id}_${idx}`;
+              const isVideoBuffered =
+                Boolean(canPlayThroughMap[videoKey]) ||
+                Boolean(canPlayThroughRef.current[videoKey]);
               const isCurrentVideo = idx === currentReelIdx;
-              const isVisible = isPlayingReel && isCurrentVideo;
+              const isVisible = isPlayingReel && isCurrentVideo && (idx === 0 || isVideoBuffered);
               const videoPoster = col.videoPosters?.[idx] || col.mainImage;
               const cacheBustedSrc = `${src}?v=2`;
               return (
                 <video
                   key={src}
                   ref={(node) => {
-                    videoRefs.current[`${col.id}_${idx}`] = node;
+                    videoRefs.current[videoKey] = node;
                     if (node) {
                       node.muted = true;
                       node.defaultMuted = true;
@@ -443,45 +519,46 @@ export const EaglePhotoTrio = React.memo(function EaglePhotoTrio({ onSelectCateg
                       node.setAttribute('muted', '');
                       node.setAttribute('playsinline', '');
                       node.setAttribute('webkit-playsinline', '');
-                      if (node.readyState >= 4) {
-                        markVideoReady(`${col.id}_${idx}`);
+                      if (node.readyState >= 4 && !canPlayThroughRef.current[videoKey]) {
+                        markVideoCanPlayThrough(videoKey);
                       }
                     }
                   }}
                   className={`elem-reel-video${isVisible ? ' is-visible' : ' is-hidden-reel'}`}
                   src={cacheBustedSrc}
                   data-video-src={src}
+                  data-canplaythrough={isVideoBuffered ? 'true' : 'false'}
                   poster={videoPoster}
-                  autoPlay
+                  autoPlay={idx === 0}
                   muted
                   loop
                   playsInline
                   preload="auto"
                   onCanPlayThrough={(e) => {
                     const v = e.currentTarget;
-                    markVideoReady(`${col.id}_${idx}`);
                     v.muted = true;
+                    markVideoCanPlayThrough(videoKey);
                     if (isCurrentVideo && isPlayingReel && v.paused) {
                       v.play().catch(() => {});
                     }
                   }}
                   onCanPlay={(e) => {
                     const v = e.currentTarget;
-                    if (v.readyState >= 4) {
-                      markVideoReady(`${col.id}_${idx}`);
-                    }
                     v.muted = true;
-                    if (isCurrentVideo && isPlayingReel && v.paused) {
+                    if (v.readyState >= 4) {
+                      markVideoCanPlayThrough(videoKey);
+                    }
+                    if (idx === 0 && isCurrentVideo && isPlayingReel && v.paused) {
                       v.play().catch(() => {});
                     }
                   }}
                   onLoadedData={(e) => {
                     const v = e.currentTarget;
-                    if (v.readyState >= 4) {
-                      markVideoReady(`${col.id}_${idx}`);
-                    }
                     v.muted = true;
-                    if (isCurrentVideo && isPlayingReel && v.paused) {
+                    if (v.readyState >= 4) {
+                      markVideoCanPlayThrough(videoKey);
+                    }
+                    if (idx === 0 && isCurrentVideo && isPlayingReel && v.paused) {
                       v.play().catch(() => {});
                     }
                   }}
@@ -526,6 +603,9 @@ export const EaglePhotoTrio = React.memo(function EaglePhotoTrio({ onSelectCateg
                         }}
                         onMouseLeave={() => {
                           setPreviewThumbColId((prev) => (prev === col.id ? null : prev));
+                          setActiveImages((prev) =>
+                            prev[col.id] ? { ...prev, [col.id]: col.mainImage } : prev
+                          );
                           ensureReelPlaying(col.id);
                         }}
                         onClick={(e) => {

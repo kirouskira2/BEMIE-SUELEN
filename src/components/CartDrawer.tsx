@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { BEMIE_PRODUCTS, STORE_CONFIG } from '../data/siteData';
 import {
   calculateProductOffer,
@@ -140,7 +139,7 @@ export function CartDrawer({
     setErrorMsg('');
   };
 
-  const drawerContent = (
+  return (
     <div className="bemie-drawer-backdrop" onClick={onClose}>
       <aside
         className="bemie-drawer numana-cart-drawer"
@@ -178,7 +177,7 @@ export function CartDrawer({
         <div className="bemie-drawer-header">
           <div className="bemie-drawer-brand">
             <img
-              src="/logos/bemie-brand-logo.jpg"
+              src="/assets/bemie-letters.png"
               alt="Bemiê Moda Praia"
               className="bemie-drawer-brand-img"
             />
@@ -460,8 +459,4 @@ export function CartDrawer({
       </aside>
     </div>
   );
-
-  return typeof document !== 'undefined'
-    ? createPortal(drawerContent, document.body)
-    : drawerContent;
 }

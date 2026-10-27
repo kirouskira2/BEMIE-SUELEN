@@ -232,7 +232,13 @@ function HomePage() {
           }
         });
 
-        tl.to('.spinner', { opacity: 0, duration: 0.3 });
+        tl.to(['.spinner', '.spinner-container', '.counter'], {
+          opacity: 0,
+          duration: 0.3,
+          onComplete: () => {
+            gsap.set(['.spinner-container', '.counter'], { display: 'none' });
+          },
+        });
         tl.to('.word h1', { y: '0%', duration: 1 }, '<');
         tl.to('.divider', {
           scaleY: '100%',
@@ -269,6 +275,16 @@ function HomePage() {
   const handleNavigate = useCallback(
     (route: string) => {
       const selector = resolveRouteTargetSelector(route);
+      if (selector === '.site-hero') {
+        (window as unknown as { __bemieNavigating?: boolean }).__bemieNavigating = false;
+        if (lenis) {
+          lenis.start();
+          lenis.scrollTo(0, { duration: 1.1 });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        return;
+      }
       const targetEl = document.querySelector(selector);
       if (targetEl) {
         (window as unknown as { __bemieNavigating?: boolean }).__bemieNavigating = true;
@@ -277,9 +293,9 @@ function HomePage() {
         }, 1350);
         if (lenis) {
           lenis.start();
-          lenis.scrollTo(targetEl as HTMLElement, { duration: 1.2, offset: -94 });
+          lenis.scrollTo(targetEl as HTMLElement, { duration: 1.15, offset: 0 });
         } else {
-          targetEl.scrollIntoView({ behavior: 'smooth' });
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }
     },
@@ -314,7 +330,7 @@ function HomePage() {
         if (targetEl) {
           if (lenis) {
             lenis.start();
-            lenis.scrollTo(targetEl, { duration: 1.15, offset: -94 });
+            lenis.scrollTo(targetEl, { duration: 1.15, offset: 0 });
           } else {
             targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
@@ -404,7 +420,7 @@ function HomePage() {
       />
 
       <CtaWindow
-        img="/assets/aistudio/image_7301ea2c.png"
+        img="/assets/aistudio/cta-window-editorial.jpg"
         header="Bemiê"
         callout="Compre pelo catálogo e finalize no WhatsApp"
       />

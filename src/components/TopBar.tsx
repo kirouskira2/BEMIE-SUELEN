@@ -27,12 +27,24 @@ export function TopBar({
   // Synchronized with smooth scroll (Lenis) when present
   useLenis((lenis) => {
     const currentY = lenis.scroll;
+    const isProgrammatic = Boolean(
+      (window as unknown as { __bemieNavigating?: boolean }).__bemieNavigating
+    );
+    if (isProgrammatic && currentY > 15) {
+      if (isVisibleRef.current) {
+        isVisibleRef.current = false;
+        setIsVisible(false);
+      }
+      lastScrollYRef.current = currentY;
+      return;
+    }
     const result = computeHeaderVisibility(
       currentY,
       lastScrollYRef.current,
       isVisibleRef.current
     );
     if (result.isVisible !== isVisibleRef.current) {
+      isVisibleRef.current = result.isVisible;
       setIsVisible(result.isVisible);
     }
     lastScrollYRef.current = result.nextLastScrollY;
@@ -46,12 +58,25 @@ export function TopBar({
       ticking = true;
       requestAnimationFrame(() => {
         const currentY = window.scrollY || document.documentElement.scrollTop || 0;
+        const isProgrammatic = Boolean(
+          (window as unknown as { __bemieNavigating?: boolean }).__bemieNavigating
+        );
+        if (isProgrammatic && currentY > 15) {
+          if (isVisibleRef.current) {
+            isVisibleRef.current = false;
+            setIsVisible(false);
+          }
+          lastScrollYRef.current = currentY;
+          ticking = false;
+          return;
+        }
         const result = computeHeaderVisibility(
           currentY,
           lastScrollYRef.current,
           isVisibleRef.current
         );
         if (result.isVisible !== isVisibleRef.current) {
+          isVisibleRef.current = result.isVisible;
           setIsVisible(result.isVisible);
         }
         lastScrollYRef.current = result.nextLastScrollY;

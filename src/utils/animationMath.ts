@@ -589,6 +589,28 @@ export function getActiveCategoryReelByElapsedMs(
 }
 
 /**
+ * Resolves the next or active Reel index ensuring that any transition to a secondary video
+ * only occurs once that video has fired `canplaythrough` (its buffer is completely loaded).
+ * If the target video's buffer is not ready (`!isTargetBuffered`), keeps the current buffered index
+ * (or falls back to index 0) to prevent initial white frames and ensure a smooth transition.
+ */
+export function resolveBufferedCategoryReelIndex(params: {
+  currentIndex: number;
+  targetIndex: number;
+  totalSources: number;
+  isTargetBuffered: boolean;
+}): number {
+  const { currentIndex, targetIndex, totalSources, isTargetBuffered } = params;
+  if (totalSources <= 1) return 0;
+  const clampedTarget = ((targetIndex % totalSources) + totalSources) % totalSources;
+  const clampedCurrent = ((currentIndex % totalSources) + totalSources) % totalSources;
+  if (clampedTarget === 0) {
+    return 0;
+  }
+  return isTargetBuffered ? clampedTarget : clampedCurrent;
+}
+
+/**
  * Determines whether the category Reel video should be actively playing and visible.
  * Plays automatically and continuously without requiring mouse hover (`isCardHovered` not required),
  * pausing/hiding only while the user hovers a specific mini product angle thumbnail (`isPreviewingProductThumb`).
@@ -619,10 +641,10 @@ export function shouldShowMouseBallCursor(params: {
 }
 
 /**
- * Calculates topbar / navigation visibility based on scroll direction.
+ * Calculates topbar / sidebar navigation visibility based on scroll direction.
  * In accordance with user preference:
- * - Hidden when scrolling down (ao descer o scroll sumir o sidebar)
- * - Shown when scrolling up (ao subir o scroll aparecer o sidebar)
+ * - Hidden when scrolling down (descendo com scroll: diff > 0)
+ * - Shown when scrolling up (subindo com scroll: diff < 0)
  * - Always shown at page top (scrollY <= topAnchor)
  */
 export function computeHeaderVisibility(
@@ -640,9 +662,9 @@ export function computeHeaderVisibility(
   if (Math.abs(diff) < threshold) {
     return { isVisible: prevVisibility, nextLastScrollY: lastScrollY };
   }
-  // User: "agora é ao contrario, quando descer o scroll sumir o sidebar e quando subir aparecer"
-  // Scrolling down (diff > 0): hidden
-  // Scrolling up (diff < 0): visible
+  // User: "quando descer o scroll sumir o sidebar e quando subir aparecer"
+  // Scrolling down (diff > 0): hidden (false)
+  // Scrolling up (diff < 0): visible (true)
   return { isVisible: diff < 0, nextLastScrollY: current };
 }
 

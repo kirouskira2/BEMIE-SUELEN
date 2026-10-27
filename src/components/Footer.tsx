@@ -104,7 +104,7 @@ export const Footer = React.memo(function Footer({ onNavigate, onOpenCart }: Foo
       <div className="numana-footer-bottom">
         <div className="numana-footer-brand-row">
           <img
-            src="/logos/bemie-brand-logo.jpg"
+            src="/assets/bemie-letters.png"
             alt="Bemiê Moda Praia"
             className="numana-footer-mini-logo"
           />

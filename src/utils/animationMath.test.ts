@@ -497,6 +497,36 @@ test('getNumanaImageRevealClasses and EAGLE_TRIO_COLUMNS match Numana photo load
   assert.equal(elem2.products[1].id, 'p_qiw632k8');
   assert.equal(elem2.products[1].name, 'BIQUÍNI MARQUINHA VERMELHO CEREJA E ROSA AREIA');
   assert.equal(elem2.products[1].image, '/bemie/products/p_qiw632k8_0.jpg');
+
+  // Verify resolveBufferedCategoryReelIndex gates second video on canplaythrough buffer state
+  const { resolveBufferedCategoryReelIndex } = await import('./animationMath');
+  assert.equal(
+    resolveBufferedCategoryReelIndex({
+      currentIndex: 0,
+      targetIndex: 1,
+      totalSources: 2,
+      isTargetBuffered: false,
+    }),
+    0
+  );
+  assert.equal(
+    resolveBufferedCategoryReelIndex({
+      currentIndex: 0,
+      targetIndex: 1,
+      totalSources: 2,
+      isTargetBuffered: true,
+    }),
+    1
+  );
+  assert.equal(
+    resolveBufferedCategoryReelIndex({
+      currentIndex: 1,
+      targetIndex: 0,
+      totalSources: 2,
+      isTargetBuffered: false,
+    }),
+    0
+  );
 });
 
 
