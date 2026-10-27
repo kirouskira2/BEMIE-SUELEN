@@ -1382,15 +1382,15 @@ body {
   transform: translateX(-50%);
   width: auto !important;
   height: auto !important;
-  padding: 11px 24px !important;
-  border-radius: 50px !important;
+  padding: 8px 16px !important;
+  border-radius: 9999px !important;
   background-color: #F7F7F7 !important;
   color: #141313 !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 32px !important;
+  gap: 14px !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(20, 19, 19, 0.08);
   z-index: 1200;
   cursor: pointer;
@@ -1408,11 +1408,15 @@ body {
   margin: 0;
   outline: none;
   box-shadow: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: #141313;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 #icons.menu-toggle.eagle-icons-pill i {
@@ -2786,8 +2790,7 @@ body {
 .bemie-checkout-form input,
 .bemie-pay-chip,
 .bemie-form-error,
-.bemie-toast,
-#icons.menu-toggle.eagle-icons-pill {
+.bemie-toast {
   border-radius: 0px !important;
 }
 
@@ -2871,14 +2874,55 @@ body {
 
 @media (max-width: 900px), (hover: none) {
   .eagle-icons-hover-zone:not(:hover) #icons.menu-toggle.eagle-icons-pill:not(.opened),
-  .eagle-icons-hover-zone #icons.menu-toggle.eagle-icons-pill {
+  .eagle-icons-hover-zone #icons.menu-toggle.eagle-icons-pill,
+  #icons.menu-toggle.eagle-icons-pill {
     transform: translateX(-50%) !important;
     opacity: 1 !important;
     pointer-events: auto !important;
-    bottom: 1.25rem !important;
+    bottom: max(1.25rem, calc(env(safe-area-inset-bottom, 16px) + 12px)) !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    width: auto !important;
+    padding: 0 8px !important;
+    border-radius: 9999px !important;
     background-color: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.12) !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+  }
+
+  #icons.menu-toggle.eagle-icons-pill .eagle-icon-trigger {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    cursor: pointer !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    transition: background-color 0.2s ease, transform 0.15s ease !important;
+  }
+
+  #icons.menu-toggle.eagle-icons-pill .eagle-icon-trigger:active {
+    background-color: rgba(20, 19, 19, 0.08) !important;
+    transform: scale(0.92) !important;
+  }
+
+  #icons.menu-toggle.eagle-icons-pill i {
+    font-size: 21px !important;
+    line-height: 1 !important;
+    color: #141313 !important;
   }
 }
 
@@ -2887,8 +2931,9 @@ body {
   transform: translateX(-50%) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
+  border-radius: 9999px !important;
   background-color: #ffffff !important;
-  border: 1px solid rgba(0, 0, 0, 0.09) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Garantir que o botão de fechar (X) e a barra flutuante inferior funcionem sempre com o menu aberto */
@@ -2914,6 +2959,10 @@ body.menu-open #icons.menu-toggle.eagle-icons-pill {
   pointer-events: auto !important;
   opacity: 1 !important;
   transform: translateX(-50%) !important;
+  border-radius: 9999px !important;
+  height: 48px !important;
+  padding: 0 8px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1) !important;
 }
 
 .menu {
