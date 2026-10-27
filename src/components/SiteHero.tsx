@@ -15,7 +15,7 @@ export const SiteHero = React.memo(function SiteHero({ onExploreCatalog }: SiteH
     <section className="hero site-hero numana-hero" aria-label="Bemiê Moda Praia">
       <div className="site-hero-media numana-hero-media">
         <img
-          src="/assets/aistudio/paa_e042e341.jfif"
+          src="/assets/capa.jfif"
           alt="Bemiê Moda Praia — Compre pelo catálogo e finalize pelo WhatsApp"
           className="hero-img site-hero-img lazyload fade-in lazyloaded"
         />
