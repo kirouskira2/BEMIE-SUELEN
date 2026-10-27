@@ -1,16 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 170">
-  <!-- Fundo branco retangular com bordas arredondadas — texto preenche quase toda a área -->
-  <rect width="600" height="170" rx="32" ry="32" fill="#ffffff"/>
-  <rect width="600" height="170" rx="32" ry="32" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3"/>
-  <!-- Texto ocupa quase todo o espaço para parecer maior em qualquer resolução -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 220">
+  <!-- Fundo branco quadrado/levemente retangular com bordas arredondadas -->
+  <rect width="260" height="220" rx="40" ry="40" fill="#ffffff"/>
+  <rect width="260" height="220" rx="40" ry="40" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3"/>
+  <!-- Bê grande e centralizado — legível mesmo em 16x16 -->
   <text
-    x="300"
-    y="133"
+    x="130"
+    y="172"
     font-family="Georgia, 'Times New Roman', serif"
-    font-size="140"
+    font-size="170"
     font-weight="700"
     fill="#7b5238"
     text-anchor="middle"
-    letter-spacing="2"
-  >BEMIÊ</text>
+    letter-spacing="1"
+  >Bê</text>
 </svg>
