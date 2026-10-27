@@ -1,17 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220">
-  <!-- Fundo branco retangular com bordas arredondadas -->
-  <rect width="640" height="220" rx="44" ry="44" fill="#ffffff"/>
-  <!-- Borda sutil para definição -->
-  <rect width="640" height="220" rx="44" ry="44" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="3"/>
-  <!-- Texto BEMIÊ grande e legível, centralizado -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 170">
+  <!-- Fundo branco retangular com bordas arredondadas — texto preenche quase toda a área -->
+  <rect width="600" height="170" rx="32" ry="32" fill="#ffffff"/>
+  <rect width="600" height="170" rx="32" ry="32" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3"/>
+  <!-- Texto ocupa quase todo o espaço para parecer maior em qualquer resolução -->
   <text
-    x="320"
-    y="158"
+    x="300"
+    y="133"
     font-family="Georgia, 'Times New Roman', serif"
-    font-size="148"
+    font-size="140"
     font-weight="700"
     fill="#7b5238"
     text-anchor="middle"
-    letter-spacing="6"
+    letter-spacing="2"
   >BEMIÊ</text>
 </svg>
