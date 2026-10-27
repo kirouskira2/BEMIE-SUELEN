@@ -2948,6 +2948,12 @@ body.menu-open .eagle-icon-trigger * {
   cursor: pointer !important;
 }
 
+body.menu-open .numana-header-hover-zone {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-100%) !important;
+}
+
 body.menu-open .eagle-icons-hover-zone {
   z-index: 10005 !important;
   height: 60px !important;
@@ -2970,6 +2976,66 @@ body.menu-open #icons.menu-toggle.eagle-icons-pill {
   max-width: 100% !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
+}
+
+body.menu-open .menu {
+  z-index: 10000 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  padding: 0.85rem !important;
+  background-color: var(--base-500) !important;
+}
+
+@media (max-width: 900px) {
+  body.menu-open .menu {
+    padding: 0.65rem !important;
+  }
+
+  body.menu-open .menu .menu-wrapper {
+    height: 100% !important;
+    max-height: 100% !important;
+    padding: max(2rem, calc(env(safe-area-inset-top, 20px) + 1.25rem)) 1.5rem calc(env(safe-area-inset-bottom, 16px) + 5rem) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    gap: 1.5rem !important;
+    border-radius: 1.5rem !important;
+    background-color: var(--base-450) !important;
+  }
+
+  body.menu-open .menu .col-1 {
+    flex: none !important;
+    padding: 0 !important;
+    height: auto !important;
+  }
+
+  body.menu-open .menu .col-2 {
+    flex: none !important;
+    padding: 0 !important;
+    height: auto !important;
+  }
+
+  body.menu-open .menu .links .link a h2 {
+    font-size: clamp(2rem, 7.5vw, 2.75rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  body.menu-open .menu .socials {
+    width: 100% !important;
+    padding-bottom: 0 !important;
+    flex-direction: column !important;
+    gap: 1.25rem !important;
+  }
+
+  body.menu-open .menu .menu-meta p {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+  }
 }
 
 /* Barra superior de promoções: preto conforme solicitado pelo usuário */
