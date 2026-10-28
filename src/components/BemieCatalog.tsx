@@ -88,18 +88,22 @@ export const BemieProductCard = React.memo(function BemieProductCard({
     <article
       className={`child numana-product-card js-product-container js-scroll-trigger${
         product.photos.length > 1 ? ' product-item-secondary-images-loaded' : ''
-      }${isHighlighted ? ' is-highlighted-child' : ''}`}
+      }${isHighlighted ? ' is-highlighted-child' : ''}${
+        isSoldOut ? ' is-soldout' : ''
+      }`}
       id={`child${index + 1}`}
       data-product-id={product.id}
       data-transition="fade-in-up"
       onMouseEnter={() => onMouseEnter(product.id)}
       onMouseLeave={() => onMouseLeave(product.id)}
     >
-      <div className="child-media-wrap">
+      <div className={`child-media-wrap${isSoldOut ? ' is-soldout' : ''}`}>
         <ProductImageZoom
           src={currentPhoto}
           alt={product.nome}
           zoomScale={1.35}
+          className={isSoldOut ? 'bemie-soldout-img' : ''}
+          containerClassName={isSoldOut ? 'is-soldout' : ''}
         />
         {isSoldOut ? (
           <span className="bemie-soldout-pill child-badge">ESGOTADO</span>

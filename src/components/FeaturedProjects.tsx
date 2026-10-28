@@ -178,7 +178,10 @@ export function FeaturedProjects({ onAddToCart }: FeaturedProjectsProps) {
     <div className="featured-projects" ref={containerRef}>
       {FEATURED_PROJECTS.map((project, index) => {
         const offer = calculateProductOffer(project);
+        const isSoldOut =
+          project.tamanhos.length > 0 && project.tamanhos.every((s) => s.q <= 0);
         const activeSize = selectedSizes[project.id] || 'P';
+        const selSizeStock = project.tamanhos.find((s) => s.t === activeSize)?.q ?? 1;
         const activePhotoIdx = selectedPhotos[project.id] || 0;
         const activePhoto = project.photos[activePhotoIdx] || project.image;
         const directWaUrl = buildWhatsAppOrderUrl(STORE_CONFIG.whatsapp, [
@@ -197,7 +200,7 @@ export function FeaturedProjects({ onAddToCart }: FeaturedProjectsProps) {
           <div
             className={`featured-project-card ${cardToneClass} ${
               lockedCardIndex === index ? 'is-scroll-locked' : ''
-            }`}
+            }${isSoldOut ? ' is-soldout' : ''}`}
             style={{ zIndex: index + 1 }}
             data-card-index={index}
             key={project.id}
@@ -250,30 +253,41 @@ export function FeaturedProjects({ onAddToCart }: FeaturedProjectsProps) {
                         <button
                           type="button"
                           className="bemie-action-primary"
+                          disabled={isSoldOut || selSizeStock <= 0}
                           onClick={() => onAddToCart(project.id, activeSize)}
                         >
-                          Adicionar à sacola · {activeSize}
+                          {isSoldOut
+                            ? 'ESGOTADO'
+                            : selSizeStock <= 0
+                            ? 'TAMANHO ESGOTADO'
+                            : `Adicionar à sacola · ${activeSize}`}
                         </button>
-                        <a
-                          href={directWaUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="bemie-action-secondary"
-                        >
-                          Pedir no WhatsApp
-                        </a>
+                        {!isSoldOut && (
+                          <a
+                            href={directWaUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bemie-action-secondary"
+                          >
+                            Pedir no WhatsApp
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="featured-project-card-media-col">
-                <div className="featured-project-card-img">
+                <div className={`featured-project-card-img${isSoldOut ? ' is-soldout' : ''}`}>
                   <img
                     src={activePhoto}
                     alt={project.title}
                     referrerPolicy="no-referrer"
+                    className={isSoldOut ? 'bemie-soldout-img' : ''}
                   />
+                  {isSoldOut && (
+                    <span className="bemie-soldout-pill child-badge">ESGOTADO</span>
+                  )}
                 </div>
                 {project.photos.length > 1 && (
                   <div

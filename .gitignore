@@ -1,13 +1,32 @@
+# Dependencies
 node_modules/
+
+# Production build artifacts
 build/
 dist/
 coverage/
+
+# OS and Editor files
 .DS_Store
+Thumbs.db
 *.log
+*.tmp
+
+# Environment variables
 .env*
 !.env.example
+
+# AI Studio local dumps
 .aistudio/
+
+# Root-level loose screenshots and temporary media
 /*.JPG
 /*.jpg
+/*.jpeg
+/*.JPEG
 /*.jfif
 /*.png
+/*.PNG
+/*.webp
+/*.mjs
+claudeanalise*
