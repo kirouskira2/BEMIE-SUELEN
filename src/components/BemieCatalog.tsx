@@ -2,12 +2,13 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { BEMIE_PRODUCTS } from '../data/siteData';
 import {
   calculateProductOffer,
-  calculatePixAndInstallments,
+  calculateCardInstallments,
   formatBrl,
   CatalogFilterKey,
   filterCatalogProducts,
   matchesCatalogStyleFilter,
   normalizeSearchText,
+  getStockForSize,
 } from '../utils/animationMath';
 import { ProductImageZoom } from './ProductImageZoom';
 
@@ -62,7 +63,18 @@ export const BemieProductCard = React.memo(function BemieProductCard({
   onStyleBadgeClick,
 }: BemieProductCardProps) {
   const offer = useMemo(() => calculateProductOffer(product), [product]);
-  const pixInfo = useMemo(() => calculatePixAndInstallments(offer.current, 5, 3), [offer.current]);
+  const cardInstallments = useMemo(
+    () => calculateCardInstallments(offer.current, 2),
+    [offer.current]
+  );
+  const isSoldOut = useMemo(
+    () => product.tamanhos.every((sz) => sz.q <= 0),
+    [product.tamanhos]
+  );
+  const selSizeStock = useMemo(
+    () => getStockForSize(product.tamanhos, selSize),
+    [product.tamanhos, selSize]
+  );
 
   const photoIdx =
     manualPhotoIdx !== undefined
@@ -89,11 +101,13 @@ export const BemieProductCard = React.memo(function BemieProductCard({
           alt={product.nome}
           zoomScale={1.35}
         />
-        {offer.active && (
+        {isSoldOut ? (
+          <span className="bemie-soldout-pill child-badge">ESGOTADO</span>
+        ) : offer.active ? (
           <span className="bemie-discount-pill child-badge">
             -{offer.percent}% OFF
           </span>
-        )}
+        ) : null}
       </div>
 
       {product.photos.length > 1 && (
@@ -137,9 +151,22 @@ export const BemieProductCard = React.memo(function BemieProductCard({
           <button
             type="button"
             className="numana-card-bag-btn"
-            aria-label={`Adicionar ${product.nome} (${selSize}) ao carrinho`}
-            title={`Adicionar ${product.nome} (${selSize}) ao carrinho`}
-            onClick={() => onAddToCart(product.id, selSize)}
+            disabled={isSoldOut || selSizeStock <= 0}
+            aria-label={
+              isSoldOut
+                ? `${product.nome} esgotado`
+                : `Adicionar ${product.nome} (${selSize}) ao carrinho`
+            }
+            title={
+              isSoldOut
+                ? `${product.nome} esgotado`
+                : `Adicionar ${product.nome} (${selSize}) ao carrinho`
+            }
+            onClick={() => {
+              if (!isSoldOut && selSizeStock > 0) {
+                onAddToCart(product.id, selSize);
+              }
+            }}
           >
             <svg
               width="15"
@@ -164,10 +191,9 @@ export const BemieProductCard = React.memo(function BemieProductCard({
           <span className="child-price">{formatBrl(offer.current)}</span>
         </div>
 
-        {/* Desconto via Pix / Transferência e parcelamento */}
+        {/* Parcelamento no cartão */}
         <p className="numana-transfer-price">
-          {pixInfo.pixLabel} · ou {pixInfo.installmentsCount}x de{' '}
-          {formatBrl(pixInfo.installmentValue)}
+          {cardInstallments.label}
         </p>
 
         {product.estilos && product.estilos.length > 0 && (
@@ -203,9 +229,10 @@ export const BemieProductCard = React.memo(function BemieProductCard({
           <button
             type="button"
             className="bemie-child-buy-btn"
+            disabled={isSoldOut || selSizeStock <= 0}
             onClick={() => onAddToCart(product.id, selSize)}
           >
-            COMPRAR · {selSize}
+            {isSoldOut ? 'ESGOTADO' : selSizeStock <= 0 ? 'TAMANHO ESGOTADO' : `COMPRAR · ${selSize}`}
           </button>
         </div>
       </div>

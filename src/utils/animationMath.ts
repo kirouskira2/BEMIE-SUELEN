@@ -265,6 +265,27 @@ export function calculatePixAndInstallments(
 }
 
 /**
+ * Computes interest-free card installments (e.g. "ou 2x de R$ 69,95 sem juros no cartão").
+ */
+export function calculateCardInstallments(
+  currentPrice: number,
+  installmentsCount = 2
+): {
+  installmentValue: number;
+  installmentsCount: number;
+  label: string;
+} {
+  const safePrice = Math.max(0, Number(currentPrice) || 0);
+  const safeCount = Math.max(1, Math.round(Number(installmentsCount) || 1));
+  const installmentValue = Math.round((safePrice / safeCount) * 100) / 100;
+  return {
+    installmentValue,
+    installmentsCount: safeCount,
+    label: `ou ${safeCount}x de ${formatBrl(installmentValue)} sem juros no cartão`,
+  };
+}
+
+/**
  * Returns the available stock for a given size token.
  */
 export function getStockForSize(tamanhos: SizeStock[], size: string): number {
@@ -499,11 +520,9 @@ const ASA_DELTA_REEL_CONFIG: CategoryReelConfig = {
   videoSrc: '/bemie/reels/reel-asa-delta.mp4',
   reelUrls: [
     'https://www.instagram.com/p/Dc3unyiRadO/',
-    'https://www.instagram.com/reel/DdWsBQBxr6W/',
   ],
   videoSources: [
     '/bemie/reels/reel-asa-delta.mp4',
-    '/bemie/reels/reel-asa-delta-2.mp4',
   ],
 };
 

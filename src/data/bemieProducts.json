@@ -69,11 +69,11 @@
         "t": "P"
       },
       {
-        "q": 1,
+        "q": 0,
         "t": "G"
       }
     ],
-    "estoqueInicial": 1,
+    "estoqueInicial": 0,
     "photoCount": 4,
     "photos": [
       "/bemie/products/p_qiw632k8_0.jpg",

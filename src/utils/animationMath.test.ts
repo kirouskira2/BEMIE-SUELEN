@@ -263,11 +263,9 @@ test('getCategoryReelConfig and shouldPlayCategoryReel map Asa Delta, Marquinha,
   assert.equal(asaDelta.videoSrc, '/bemie/reels/reel-asa-delta.mp4');
   assert.deepEqual(asaDelta.reelUrls, [
     'https://www.instagram.com/p/Dc3unyiRadO/',
-    'https://www.instagram.com/reel/DdWsBQBxr6W/',
   ]);
   assert.deepEqual(asaDelta.videoSources, [
     '/bemie/reels/reel-asa-delta.mp4',
-    '/bemie/reels/reel-asa-delta-2.mp4',
   ]);
 
   const marquinha = getCategoryReelConfig('Marquinha');
@@ -305,9 +303,9 @@ test('getCategoryReelConfig and shouldPlayCategoryReel map Asa Delta, Marquinha,
     reelUrl: 'https://www.instagram.com/p/Dc3unyiRadO/',
   });
   assert.deepEqual(getActiveCategoryReelByElapsedMs('ASA DELTA', 7000), {
-    index: 1,
-    videoSrc: '/bemie/reels/reel-asa-delta-2.mp4',
-    reelUrl: 'https://www.instagram.com/reel/DdWsBQBxr6W/',
+    index: 0,
+    videoSrc: '/bemie/reels/reel-asa-delta.mp4',
+    reelUrl: 'https://www.instagram.com/p/Dc3unyiRadO/',
   });
   assert.deepEqual(getActiveCategoryReelByElapsedMs('ASA DELTA', 14000), {
     index: 0,
@@ -346,7 +344,11 @@ test('getCategoryReelConfig and shouldPlayCategoryReel map Asa Delta, Marquinha,
 });
 
 test('calculatePixAndInstallments, shouldShowMouseBallCursor, and Instagram feed items support the Numana catalog & instafeed adaptation', async () => {
-  const { calculatePixAndInstallments, shouldShowMouseBallCursor } = await import('./animationMath');
+  const {
+    calculatePixAndInstallments,
+    calculateCardInstallments,
+    shouldShowMouseBallCursor,
+  } = await import('./animationMath');
   const { INSTAGRAM_FEED_ITEMS, HEADER_PROMO_BAR_TEXT } = await import('../data/siteData');
 
   // Cursor ball is strictly disabled in catalog
@@ -397,7 +399,15 @@ test('calculatePixAndInstallments, shouldShowMouseBallCursor, and Instagram feed
   const defaultCatalogCovers = new Set(BEMIE_PRODUCTS.map((p) => p.photos[0]));
   assert.ok(INSTAGRAM_FEED_ITEMS.every((item) => !defaultCatalogCovers.has(item.image)));
 
+  const cardInst = calculateCardInstallments(143.84, 2);
+  assert.equal(cardInst.installmentsCount, 2);
+  assert.equal(cardInst.installmentValue, 71.92);
+  assert.ok(cardInst.label.includes('2x de'));
+  assert.ok(cardInst.label.includes('71,92'));
+  assert.ok(cardInst.label.includes('sem juros no cartão'));
+
   assert.ok(HEADER_PROMO_BAR_TEXT.includes('20% OFF'));
+  assert.ok(HEADER_PROMO_BAR_TEXT.includes('2x sem juros no cartão'));
   assert.equal(resolveRouteTargetSelector('#instagram'), '.numana-instafeed-section');
 });
 
@@ -487,6 +497,8 @@ test('getNumanaImageRevealClasses and EAGLE_TRIO_COLUMNS match Numana photo load
   // Verify elem1 (ASA DELTA) 2nd inner product is BIQUÍNI HAWAI MARQUINHA DE AMARRAR BOSSA
   const elem1 = EAGLE_TRIO_COLUMNS.find((c) => c.id === 'elem1');
   assert.ok(elem1);
+  assert.equal(elem1.videoSources.length, 1);
+  assert.equal(elem1.videoSources[0], '/bemie/reels/reel-asa-delta.mp4');
   assert.equal(elem1.products[1].id, 'p_dwsrre4l');
   assert.equal(elem1.products[1].name, 'BIQUÍNI HAWAI MARQUINHA DE AMARRAR BOSSA');
   assert.equal(elem1.products[1].image, '/bemie/products/p_dwsrre4l_0.jpg');

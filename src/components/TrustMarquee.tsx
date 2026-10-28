@@ -188,7 +188,7 @@ export const TRUST_BENEFITS = [
       <span className="bemie-trust-text">
         Pagamentos via{' '}
         <strong className="bemie-trust-bold">Pix</strong> ·{' '}
-        <strong className="bemie-trust-bold">Crédito</strong> (até 12x) ·{' '}
+        <strong className="bemie-trust-bold">Crédito</strong> em até 2x sem juros ·{' '}
         <em className="bemie-trust-serif">Débito</em>
       </span>
     ),

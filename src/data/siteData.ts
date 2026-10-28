@@ -146,9 +146,9 @@ export const BEMIE_PRODUCTS: BemieProduct[] = [
     tamanho: 'P, G',
     tamanhos: [
       { t: 'P', q: 0 },
-      { t: 'G', q: 1 },
+      { t: 'G', q: 0 },
     ],
-    estoqueInicial: 1,
+    estoqueInicial: 0,
     photos: [
       '/bemie/products/p_qiw632k8_0.jpg',
       '/bemie/products/p_qiw632k8_1.jpg',
@@ -487,7 +487,7 @@ export interface InstagramFeedItem {
 }
 
 export const HEADER_PROMO_BAR_TEXT =
-  '20% OFF em peças selecionadas ou 5% OFF extra no Pix // ENVIOS PARA TODO O BRASIL em 5 a 10 dias úteis';
+  '20% OFF em peças selecionadas ou 2x sem juros no cartão // ENVIOS PARA TODO O BRASIL em 5 a 10 dias úteis';
 
 export const INSTAGRAM_FEED_ITEMS: InstagramFeedItem[] = [
   {

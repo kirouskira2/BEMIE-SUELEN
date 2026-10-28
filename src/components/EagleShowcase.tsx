@@ -51,14 +51,11 @@ export const EAGLE_TRIO_COLUMNS: EagleTrioColumn[] = [
     videoSrc: getCategoryReelConfig('ASA DELTA')?.videoSrc || '/bemie/reels/reel-asa-delta.mp4',
     reelUrls: getCategoryReelConfig('ASA DELTA')?.reelUrls || [
       'https://www.instagram.com/p/Dc3unyiRadO/',
-      'https://www.instagram.com/reel/DdWsBQBxr6W/',
     ],
     videoSources: getCategoryReelConfig('ASA DELTA')?.videoSources || [
       '/bemie/reels/reel-asa-delta.mp4',
-      '/bemie/reels/reel-asa-delta-2.mp4',
     ],
     videoPosters: [
-      '/bemie/products/p_bayopyq5_0.jpg',
       '/bemie/products/p_bayopyq5_0.jpg',
     ],
     pillBg: '#efe3d3',
